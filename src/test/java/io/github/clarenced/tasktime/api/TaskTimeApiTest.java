@@ -30,4 +30,28 @@ public class TaskTimeApiTest {
     }
 
 
+    @Test
+    @DisplayName("Should return task by id")
+    void should_return_task_by_id(@Autowired MockMvc mockMvc) throws Exception {
+        mockMvc.perform(get("/api/tasks/{taskId}", 3))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.title").value("Go to the theater"))
+                .andExpect(jsonPath("$.description").value("Go to the theater"))
+                .andExpect(jsonPath("$.id").value(3));
+
+        mockMvc.perform(get("/api/tasks/{taskId}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.title").value("Prepare slides for the Spring meetup"))
+                .andExpect(jsonPath("$.description").value("Prepare slides for the Spring meetup"))
+                .andExpect(jsonPath("$.id").value(1));
+    }
+
+    @Test
+    @DisplayName("Should return 404 when task not found")
+    void should_return_404_when_task_not_found(@Autowired MockMvc mockMvc) throws Exception {
+        mockMvc.perform(get("/api/tasks/{taskId}", 4))
+                .andExpect(status().isNotFound());
+    }
 }
