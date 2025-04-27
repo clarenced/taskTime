@@ -46,7 +46,7 @@ public class TaskValidatorTest {
     @Test
     @DisplayName("Should return error when title is more than 30 chars")
     void should_return_error_when_title_is_more_than_30_chars() {
-        var createTaskDto = new TaskTimeApi.CreateTaskDto("Create a new Unit test", "Test Description".repeat(35));
+        var createTaskDto = new TaskTimeApi.CreateTaskDto("Create a new Unit test".repeat(35), "Test Description");
 
         Result<TaskTimeApi.CreateTaskDto, TaskTimeApi.ErrorDto> result = TaskValidator.validateTask(createTaskDto);
 
@@ -54,12 +54,11 @@ public class TaskValidatorTest {
         assertEquals("title", result.getError().field());
         assertEquals("title has more than 30 characters", result.getError().message());
 
-
     }
 
     @Test
-    @DisplayName("Should return error when title is less than 3 chars")
-    void should_return_error_when_title_is_less_than_3_chars() {
+    @DisplayName("Should return error when title is less than 5 chars")
+    void should_return_error_when_title_is_less_than_5_chars() {
         var createTaskDto = new TaskTimeApi.CreateTaskDto("Test", "Test Description");
 
         Result<TaskTimeApi.CreateTaskDto, TaskTimeApi.ErrorDto> result = TaskValidator.validateTask(createTaskDto);
@@ -67,6 +66,18 @@ public class TaskValidatorTest {
         assertTrue(result.isError());
         assertEquals("title", result.getError().field());
         assertEquals("title must have at least 5 characters", result.getError().message());
+    }
+
+
+    @Test
+    @DisplayName("Should return error when description is more than 300 chars")
+    void should_return_error_when_description_is_more_than_300_chars() {
+        var createTaskDto = new TaskTimeApi.CreateTaskDto("Create a new Unit test", "Test Description".repeat(105));
+        Result<TaskTimeApi.CreateTaskDto, TaskTimeApi.ErrorDto> result = TaskValidator.validateTask(createTaskDto);
+
+        assertTrue(result.isError());
+        assertEquals("description", result.getError().field());
+        assertEquals("description has more than 300 characters", result.getError().message());
     }
 
 }

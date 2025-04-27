@@ -13,7 +13,6 @@ public class TaskRepository {
         this.tasks = new ArrayList<>();
         tasks.add(new TaskTimeApi.TaskDto(1L, "Prepare slides for the Spring meetup", "Prepare slides for the Spring meetup"));
         tasks.add(new TaskTimeApi.TaskDto(3L, "Go to the theater", "Go to the theater"));
-
     }
 
     void createTask(TaskTimeApi.CreateTaskDto createTaskDto) {
