@@ -1,4 +1,4 @@
-package io.github.clarenced.tasktime.api;
+package io.github.clarenced.tasktime.common;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

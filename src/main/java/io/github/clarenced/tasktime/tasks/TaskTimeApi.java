@@ -1,6 +1,7 @@
-package io.github.clarenced.tasktime.api;
+package io.github.clarenced.tasktime.tasks;
 
 
+import io.github.clarenced.tasktime.common.Result;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

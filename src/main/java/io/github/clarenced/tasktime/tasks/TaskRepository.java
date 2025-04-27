@@ -1,4 +1,4 @@
-package io.github.clarenced.tasktime.api;
+package io.github.clarenced.tasktime.tasks;
 
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class TaskRepository {
         return tasks;
     }
 
-    boolean newTaskIsAdded(String testTask) {
+    public boolean newTaskIsAdded(String testTask) {
         return getTasks().stream().anyMatch(task -> task.title().equals(testTask));
     }
 
