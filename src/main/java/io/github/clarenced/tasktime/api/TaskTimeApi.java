@@ -15,6 +15,7 @@ public class TaskTimeApi {
 
     public record TaskDto(Long id, String title, String description){}
     public record CreateTaskDto(String title, String description){}
+    public record ErrorDto(String field, String message){}
 
     @GetMapping(value = "/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TaskDto>> getAllTasks(){
@@ -31,7 +32,11 @@ public class TaskTimeApi {
     }
 
     @PostMapping(value = "/tasks", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> createTask(@RequestBody CreateTaskDto createTaskDto){
+    public ResponseEntity<?> createTask(@RequestBody CreateTaskDto createTaskDto){
+        if(createTaskDto.title().isEmpty()){
+            ErrorDto errorDto = new ErrorDto("title", "title is empty");
+            return ResponseEntity.badRequest().body(errorDto);
+        }
         taskRepository.createTask(createTaskDto);
         return ResponseEntity.status(201).build();
     }
