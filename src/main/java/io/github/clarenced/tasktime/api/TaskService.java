@@ -16,8 +16,7 @@ public class TaskService {
     }
 
     /**
-     * Example of how to use the Result class in the TaskTimeApi.
-     * This method shows how the validateTask method could be used in the createTask endpoint.
+     * Validate the task before creating it.
      * @param createTaskDto The task creation request
      * @return A Result indicating success or containing an error
      */
@@ -33,7 +32,7 @@ public class TaskService {
         return this.taskRepository.getTasks();
     }
 
-    Optional<TaskTimeApi.TaskDto> findTaskById(int taskId) {
+    public Optional<TaskTimeApi.TaskDto> findTaskById(int taskId) {
         return getTasks().stream()
                 .filter(task -> task.id() == taskId)
                 .findFirst();

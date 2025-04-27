@@ -42,4 +42,22 @@ public class TaskValidatorTest {
         assertEquals("description", result.getError().field());
         assertEquals("description is empty", result.getError().message());
     }
+
+    @Test
+    @DisplayName("Should return error when title is more than 30 chars")
+    void should_return_error_when_title_is_more_than_30_chars() {
+
+    }
+
+    @Test
+    @DisplayName("Should return error when title is less than 3 chars")
+    void should_return_error_when_title_is_less_than_3_chars() {
+        var createTaskDto = new TaskTimeApi.CreateTaskDto("Test", "Test Description");
+
+        Result<TaskTimeApi.CreateTaskDto, TaskTimeApi.ErrorDto> result = TaskValidator.validateTask(createTaskDto);
+
+        assertTrue(result.isError());
+        assertEquals("title", result.getError().field());
+        assertEquals("title must have at least 5 characters", result.getError().message());
+    }
 }

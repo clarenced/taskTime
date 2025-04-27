@@ -16,6 +16,9 @@ public class TaskValidator {
         if (createTaskDto.description().isEmpty()) {
             return Result.error(new TaskTimeApi.ErrorDto("description", "description is empty"));
         }
+        if(createTaskDto.title().length() <= 5) {
+            return Result.error(new TaskTimeApi.ErrorDto("title", "title must have at least 5 characters"));
+        }
         return Result.success(createTaskDto);
     }
 }
