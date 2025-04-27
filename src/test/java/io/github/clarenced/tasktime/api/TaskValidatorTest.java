@@ -80,4 +80,16 @@ public class TaskValidatorTest {
         assertEquals("description has more than 300 characters", result.getError().message());
     }
 
+
+    @Test
+    @DisplayName("Should return error when description is less than 5 chars")
+    void should_return_error_when_description_is_less_than_5_chars() {
+        var createTaskDto = new TaskTimeApi.CreateTaskDto("Test creation example", "Test");
+        Result<TaskTimeApi.CreateTaskDto, TaskTimeApi.ErrorDto> result = TaskValidator.validateTask(createTaskDto);
+
+        assertTrue(result.isError());
+        assertEquals("description", result.getError().field());
+        assertEquals("description must have at least 5 characters", result.getError().message());
+    }
+
 }
