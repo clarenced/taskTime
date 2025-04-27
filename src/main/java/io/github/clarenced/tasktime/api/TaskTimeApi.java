@@ -13,7 +13,12 @@ public class TaskTimeApi {
 
     private final TaskRepository taskRepository = new TaskRepository();
 
-    public record TaskDto(Long id, String title, String description){}
+    public enum TaskStatus {TO_DO, IN_PROGRESS, DONE}
+    public record TaskDto(Long id, String title, String description, TaskStatus status){
+        public TaskDto(Long id, String title, String description) {
+            this(id, title, description, TaskStatus.TO_DO);
+        }
+    }
     public record CreateTaskDto(String title, String description){}
     public record ErrorDto(String field, String message){}
 

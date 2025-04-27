@@ -70,7 +70,8 @@ public class TaskTimeApiTest {
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.length()").value(3))
                 .andExpect(jsonPath("$[2].title").value("New task"))
-                .andExpect(jsonPath("$[2].description").value("description"));
+                .andExpect(jsonPath("$[2].description").value("description"))
+                .andExpect(jsonPath("$[2].status").value("TO_DO"));
     }
 
     @Test
@@ -83,7 +84,6 @@ public class TaskTimeApiTest {
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.message").value("title is empty"))
                 .andExpect(jsonPath("$.field").value("title"));
-
     }
 
 
