@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -53,5 +54,30 @@ public class TaskTimeApiTest {
     void should_return_404_when_task_not_found(@Autowired MockMvc mockMvc) throws Exception {
         mockMvc.perform(get("/api/tasks/{taskId}", 4))
                 .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    @DisplayName("Should create new task")
+    void should_create_task(@Autowired MockMvc mockMvc) throws Exception {
+        mockMvc.perform(post("/api/tasks")
+                .contentType("application/json")
+                .content("{\"title\":\"New task\",\"description\":\"description\"}"))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/tasks"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$[2].title").value("New task"))
+                .andExpect(jsonPath("$[2].description").value("description"));
+    }
+
+    void should_bad_request_when_creating_tasks_with_empty_title(@Autowired MockMvc mockMvc) throws Exception {
+        mockMvc.perform(post("/api/tasks")
+                .contentType("application/json")
+                .content("{\"title\":\"\",\"description\":\"description\"}"))
+                .andExpect(status().isBadRequest());
+
     }
 }
