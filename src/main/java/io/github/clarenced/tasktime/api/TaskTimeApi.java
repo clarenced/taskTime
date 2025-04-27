@@ -12,7 +12,11 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class TaskTimeApi {
 
-    private final TaskRepository taskRepository = new TaskRepository();
+    private final TaskService taskService;
+
+    public TaskTimeApi(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     public enum TaskStatus {TO_DO, IN_PROGRESS, DONE}
     public record TaskDto(Long id, String title, String description, TaskStatus status){
@@ -25,35 +29,22 @@ public class TaskTimeApi {
 
     @GetMapping(value = "/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TaskDto>> getAllTasks(){
-        return ResponseEntity.ok(this.taskRepository.getTasks());
+        return ResponseEntity.ok(this.taskService.getTasks());
     }
 
     @GetMapping(value = "/tasks/{taskId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TaskDto> getTaskById(@PathVariable int taskId){
-       return this.taskRepository.getTasks().stream()
-               .filter(task -> task.id() == taskId)
-               .findFirst()
+        return taskService.findTaskById(taskId, this)
                .map(ResponseEntity::ok)
                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(value = "/tasks", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createTask(@RequestBody CreateTaskDto createTaskDto){
-        return validateTask(createTaskDto)
-                .map(errorDto -> ResponseEntity.badRequest().body(errorDto))
-                .orElseGet(() -> {
-                    taskRepository.createTask(createTaskDto);
-                    return ResponseEntity.status(201).build();
-                });
-    }
-
-    private Optional<ErrorDto> validateTask(CreateTaskDto createTaskDto){
-        if(createTaskDto.title().isEmpty()){
-            return Optional.of(new ErrorDto("title", "title is empty"));
+        Result<Void, ErrorDto> result = taskService.createTask(createTaskDto);
+        if(result.isError()){
+            return ResponseEntity.badRequest().body(result.getError());
         }
-        if(createTaskDto.description().isEmpty()){
-            return Optional.of(new ErrorDto("description", "description is empty"));
-        }
-        return Optional.empty();
+        return result.map(res -> ResponseEntity.status(201).build()).getSuccess();
     }
 }

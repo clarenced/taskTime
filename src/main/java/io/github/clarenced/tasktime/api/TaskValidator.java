@@ -1,0 +1,21 @@
+package io.github.clarenced.tasktime.api;
+
+public class TaskValidator {
+
+
+    /**
+     * Validates a task creation request.
+     *
+     * @param createTaskDto The task creation request to validate
+     * @return A Result containing either a validated CreateTaskDto or an ErrorDto
+     */
+    public static Result<TaskTimeApi.CreateTaskDto, TaskTimeApi.ErrorDto> validateTask(TaskTimeApi.CreateTaskDto createTaskDto) {
+        if (createTaskDto.title().isEmpty()) {
+            return Result.error(new TaskTimeApi.ErrorDto("title", "title is empty"));
+        }
+        if (createTaskDto.description().isEmpty()) {
+            return Result.error(new TaskTimeApi.ErrorDto("description", "description is empty"));
+        }
+        return Result.success(createTaskDto);
+    }
+}
