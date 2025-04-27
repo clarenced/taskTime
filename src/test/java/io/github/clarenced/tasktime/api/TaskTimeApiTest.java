@@ -85,4 +85,17 @@ public class TaskTimeApiTest {
                 .andExpect(jsonPath("$.field").value("title"));
 
     }
+
+
+    @Test
+    @DisplayName("Should return bad request when title is empty")
+    void should_return_bad_request_when_description_is_empty(@Autowired MockMvc mockMvc) throws Exception {
+        mockMvc.perform(post("/api/tasks")
+                .contentType("application/json")
+                .content("{\"title\":\"title\",\"description\":\"\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.message").value("description is empty"))
+                .andExpect(jsonPath("$.field").value("description"));
+    }
 }

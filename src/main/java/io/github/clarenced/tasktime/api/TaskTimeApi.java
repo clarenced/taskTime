@@ -37,6 +37,10 @@ public class TaskTimeApi {
             ErrorDto errorDto = new ErrorDto("title", "title is empty");
             return ResponseEntity.badRequest().body(errorDto);
         }
+        if(createTaskDto.description().isEmpty()){
+            ErrorDto errorDto = new ErrorDto("description", "description is empty");
+            return ResponseEntity.badRequest().body(errorDto);
+        }
         taskRepository.createTask(createTaskDto);
         return ResponseEntity.status(201).build();
     }
