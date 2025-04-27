@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -34,7 +33,7 @@ public class TaskTimeApi {
 
     @GetMapping(value = "/tasks/{taskId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TaskDto> getTaskById(@PathVariable int taskId){
-        return taskService.findTaskById(taskId, this)
+        return taskService.findTaskById(taskId)
                .map(ResponseEntity::ok)
                .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -45,6 +44,6 @@ public class TaskTimeApi {
         if(result.isError()){
             return ResponseEntity.badRequest().body(result.getError());
         }
-        return result.map(res -> ResponseEntity.status(201).build()).getSuccess();
+        return result.map(_ -> ResponseEntity.status(201).build()).getSuccess();
     }
 }

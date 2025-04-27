@@ -33,7 +33,7 @@ public class TaskService {
         return this.taskRepository.getTasks();
     }
 
-    Optional<TaskTimeApi.TaskDto> findTaskById(int taskId, TaskTimeApi taskTimeApi) {
+    Optional<TaskTimeApi.TaskDto> findTaskById(int taskId) {
         return getTasks().stream()
                 .filter(task -> task.id() == taskId)
                 .findFirst();

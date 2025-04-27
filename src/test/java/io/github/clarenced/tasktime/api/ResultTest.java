@@ -85,7 +85,7 @@ public class ResultTest {
         AtomicBoolean executed = new AtomicBoolean(false);
         
         Result<String, String> result = Result.error("Error");
-        result.onSuccess(s -> executed.set(true));
+        result.onSuccess(_ -> executed.set(true));
         
         assertFalse(executed.get());
     }
@@ -112,7 +112,7 @@ public class ResultTest {
         AtomicBoolean executed = new AtomicBoolean(false);
         
         Result<String, String> result = Result.success("Success");
-        result.onError(e -> executed.set(true));
+        result.onError(_ -> executed.set(true));
         
         assertFalse(executed.get());
     }
