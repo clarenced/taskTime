@@ -46,6 +46,14 @@ public class TaskValidatorTest {
     @Test
     @DisplayName("Should return error when title is more than 30 chars")
     void should_return_error_when_title_is_more_than_30_chars() {
+        var createTaskDto = new TaskTimeApi.CreateTaskDto("Create a new Unit test", "Test Description".repeat(35));
+
+        Result<TaskTimeApi.CreateTaskDto, TaskTimeApi.ErrorDto> result = TaskValidator.validateTask(createTaskDto);
+
+        assertTrue(result.isError());
+        assertEquals("title", result.getError().field());
+        assertEquals("title has more than 30 characters", result.getError().message());
+
 
     }
 
@@ -60,4 +68,5 @@ public class TaskValidatorTest {
         assertEquals("title", result.getError().field());
         assertEquals("title must have at least 5 characters", result.getError().message());
     }
+
 }

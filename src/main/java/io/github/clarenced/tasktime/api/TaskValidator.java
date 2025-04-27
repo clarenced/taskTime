@@ -19,6 +19,9 @@ public class TaskValidator {
         if(createTaskDto.title().length() <= 5) {
             return Result.error(new TaskTimeApi.ErrorDto("title", "title must have at least 5 characters"));
         }
+        if(createTaskDto.title().length() > 30) {
+            return Result.error(new TaskTimeApi.ErrorDto("title", "title has more than 30 characters"));
+        }
         return Result.success(createTaskDto);
     }
 }
