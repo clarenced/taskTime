@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -38,15 +39,21 @@ public class TaskTimeApi {
 
     @PostMapping(value = "/tasks", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createTask(@RequestBody CreateTaskDto createTaskDto){
+        return validateTask(createTaskDto)
+                .map(errorDto -> ResponseEntity.badRequest().body(errorDto))
+                .orElseGet(() -> {
+                    taskRepository.createTask(createTaskDto);
+                    return ResponseEntity.status(201).build();
+                });
+    }
+
+    private Optional<ErrorDto> validateTask(CreateTaskDto createTaskDto){
         if(createTaskDto.title().isEmpty()){
-            ErrorDto errorDto = new ErrorDto("title", "title is empty");
-            return ResponseEntity.badRequest().body(errorDto);
+            return Optional.of(new ErrorDto("title", "title is empty"));
         }
         if(createTaskDto.description().isEmpty()){
-            ErrorDto errorDto = new ErrorDto("description", "description is empty");
-            return ResponseEntity.badRequest().body(errorDto);
+            return Optional.of(new ErrorDto("description", "description is empty"));
         }
-        taskRepository.createTask(createTaskDto);
-        return ResponseEntity.status(201).build();
+        return Optional.empty();
     }
 }
