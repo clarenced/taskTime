@@ -21,4 +21,12 @@ public class ErrorFactory {
     static TaskTimeApi.ErrorDto descriptionHasMore300Characters() {
         return new TaskTimeApi.ErrorDto("description", "description has more than 300 characters");
     }
+
+    static TaskTimeApi.ErrorDto descriptionIsEmpty() {
+        return new TaskTimeApi.ErrorDto("description", "description is empty");
+    }
+
+    static TaskTimeApi.ErrorDto titleIsEmpty() {
+        return new TaskTimeApi.ErrorDto("title", "title is empty");
+    }
 }
