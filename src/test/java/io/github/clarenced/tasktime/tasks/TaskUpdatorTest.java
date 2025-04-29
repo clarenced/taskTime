@@ -30,9 +30,9 @@ class TaskUpdatorTest {
         var actual = TaskUpdator.updateTask(originalTask, updateTaskDto);
 
         assertTrue(actual.isSuccess());
-        assertEquals(actual.getSuccess().title(), "Original Task");
-        assertEquals(actual.getSuccess().description(), "description to be updated");
-        assertEquals(actual.getSuccess().status(), TaskTimeApi.TaskStatus.DONE);
+        assertEquals("Original Task", actual.getSuccess().title());
+        assertEquals("description to be updated", actual.getSuccess().description());
+        assertEquals(TaskTimeApi.TaskStatus.DONE, actual.getSuccess().status());
     }
 
     @Test
@@ -43,9 +43,9 @@ class TaskUpdatorTest {
         var actual = TaskUpdator.updateTask(originalTask, updateTaskDto);
 
         assertTrue(actual.isSuccess());
-        assertEquals(actual.getSuccess().title(), "title to be updated");
-        assertEquals(actual.getSuccess().description(), "original Description");
-        assertEquals(actual.getSuccess().status(), TaskTimeApi.TaskStatus.DONE);
+        assertEquals("title to be updated", actual.getSuccess().title());
+        assertEquals("original Description", actual.getSuccess().description());
+        assertEquals(TaskTimeApi.TaskStatus.DONE, actual.getSuccess().status());
     }
 
     @Test
@@ -56,14 +56,14 @@ class TaskUpdatorTest {
         var actual = TaskUpdator.updateTask(originalTask, updateTaskDto);
 
         assertTrue(actual.isSuccess());
-        assertEquals(actual.getSuccess().title(), "title to be updated");
-        assertEquals(actual.getSuccess().description(), "description to be updated");
-        assertEquals(actual.getSuccess().status(), TaskTimeApi.TaskStatus.TO_DO);
+        assertEquals("title to be updated", actual.getSuccess().title());
+        assertEquals("description to be updated", actual.getSuccess().description());
+        assertEquals(TaskTimeApi.TaskStatus.TO_DO, actual.getSuccess().status());
     }
 
 
     @Test
-    void should_not_update_task_when_title_is_too_long () {
+    void should_return_error_task_when_title_is_too_long () {
         var updateTaskDto =
                 new TaskTimeApi.UpdateTaskDto(of("title to be updated".repeat(35)), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE));
         var originalTask = new TaskTimeApi.TaskDto(1L, "Original Task", "original Description");
@@ -76,7 +76,7 @@ class TaskUpdatorTest {
     }
 
     @Test
-    void should_not_update_task_when_title_is_too_short () {
+    void should_returns_error_task_when_title_is_too_short () {
         var updateTaskDto =
                 new TaskTimeApi.UpdateTaskDto(of("tit"), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE));
         var originalTask = new TaskTimeApi.TaskDto(1L, "Original Task", "original Description");
@@ -86,5 +86,18 @@ class TaskUpdatorTest {
         assertTrue(result.isError());
         assertEquals("title", result.getError().field());
         assertEquals("title must have at least 5 characters", result.getError().message());
+    }
+
+    @Test
+    void should_return_error_when_task_description_is_too_long () {
+        var updateTaskDto =
+                new TaskTimeApi.UpdateTaskDto(of("title to be updated"), of("description to be updated".repeat(301)), of(TaskTimeApi.TaskStatus.DONE));
+        var originalTask = new TaskTimeApi.TaskDto(1L, "Original Task", "original Description");
+
+        Result<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto> result = TaskUpdator.updateTask(originalTask, updateTaskDto);
+
+        assertTrue(result.isError());
+        assertEquals("description", result.getError().field());
+        assertEquals("description has more than 300 characters", result.getError().message());
     }
 }
