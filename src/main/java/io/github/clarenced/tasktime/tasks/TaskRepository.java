@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class TaskRepository {
@@ -31,5 +33,43 @@ public class TaskRepository {
 
     public boolean noNewTaskIsCreated() {
         return this.tasks.size() == 2;
+    }
+
+    public void updateTask(TaskTimeApi.TaskDto updatedTask) {
+        Optional<TaskTimeApi.TaskDto> taskDto = getTasks().stream()
+                .filter(task -> task.id().equals(updatedTask.id()))
+                .findFirst();
+
+        if(taskDto.isPresent()) {
+            this.tasks.set(this.tasks.indexOf(taskDto.get()), updatedTask);
+        } else {
+            throw new IllegalArgumentException("Task with id " + updatedTask.id() + " does not exist");
+        }
+
+    }
+
+    public boolean assertThatTitle(Long taskId, String titleToBeUpdated) {
+        return getTasks().stream()
+                .filter(taskDto -> taskDto.id().equals(taskId))
+                .findFirst()
+                .map(taskDto -> taskDto.title().equals(titleToBeUpdated))
+                .orElse(false);
+
+    }
+
+    public boolean assertThatDescription(long taskId, String descriptionToBeUpdated) {
+        return getTasks().stream()
+                .filter(taskDto -> taskDto.id().equals(taskId))
+                .findFirst()
+                .map(taskDto -> taskDto.description().equals(descriptionToBeUpdated))
+                .orElse(false);
+    }
+
+    public boolean assertThatStatus(long taskId, TaskTimeApi.TaskStatus taskStatus) {
+        return getTasks().stream()
+                .filter(taskDto -> taskDto.id().equals(taskId))
+                .findFirst()
+                .map(taskDto -> taskDto.status().equals(taskStatus))
+                .orElse(false);
     }
 }

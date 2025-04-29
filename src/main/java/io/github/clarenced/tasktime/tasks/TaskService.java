@@ -45,8 +45,14 @@ public class TaskService {
             return Result.error(new TaskTimeApi.ErrorDto("taskId", "Task not found"));
         }
         var updatedTask = TaskUpdator.updateTask(task.get(), createTaskDto);
-        taskRepository.updateTask(updatedTask);
-        return Result.success();
+        if(updatedTask.isError()) {
+            return Result.error(updatedTask.getError());
+        }
+
+        return updatedTask.map(_ -> {
+            taskRepository.updateTask(updatedTask.getSuccess());
+            return null;
+        });
     }
 
 }

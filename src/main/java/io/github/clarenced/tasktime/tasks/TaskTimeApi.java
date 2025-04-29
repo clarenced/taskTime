@@ -4,7 +4,6 @@ package io.github.clarenced.tasktime.tasks;
 import io.github.clarenced.tasktime.common.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +36,7 @@ public class TaskTimeApi {
     }
 
     @GetMapping(value = "/tasks/{taskId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TaskDto> getTaskById(@PathVariable int taskId){
+    public ResponseEntity<TaskDto> getTaskById(@PathVariable Long taskId){
         return taskService.findTaskById(taskId)
                .map(ResponseEntity::ok)
                .orElseGet(() -> ResponseEntity.notFound().build());
@@ -55,7 +54,12 @@ public class TaskTimeApi {
 
     @PostMapping(value = "/tasks/{taskId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateTask(@PathVariable Long taskId, @RequestBody UpdateTaskDto createTaskDto){
-        var error = new ErrorDto("id", "Task not found");
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+
+        Result<Void, ErrorDto> result = this.taskService.updateTask(taskId, createTaskDto);
+        if(result.isError()){
+            return new ResponseEntity<>(result.getError(), HttpStatus.NOT_FOUND);
+        }
+        return result.map(_ -> ResponseEntity.ok().build()).getSuccess();
+
     }
 }

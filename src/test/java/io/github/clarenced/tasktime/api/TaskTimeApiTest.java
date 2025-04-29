@@ -40,13 +40,6 @@ public class TaskTimeApiTest {
                 .andExpect(jsonPath("$.title").value("Go to the theater"))
                 .andExpect(jsonPath("$.description").value("Go to the theater"))
                 .andExpect(jsonPath("$.id").value(3));
-
-        mockMvc.perform(get("/api/tasks/{taskId}", 1))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.title").value("Prepare slides for the Spring meetup"))
-                .andExpect(jsonPath("$.description").value("Prepare slides for the Spring meetup"))
-                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
@@ -108,5 +101,21 @@ public class TaskTimeApiTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.message").value("Task not found"));
+    }
+
+    @Test
+    @DisplayName("should return 200 when updating task with valid data")
+    void should_return_200_when_updating_task_with_valid_data(@Autowired MockMvc mockMvc) throws Exception {
+        mockMvc.perform(post("/api/tasks/{taskId}", 1)
+                .contentType("application/json")
+                .content("{\"title\":\"title to be updated\",\"description\":\"description to be updated\"}"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/tasks/{taskId}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.title").value("title to be updated"))
+                .andExpect(jsonPath("$.description").value("description to be updated"))
+                .andExpect(jsonPath("$.id").value(1));
     }
 }
