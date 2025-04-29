@@ -8,11 +8,11 @@ import java.util.Optional;
 
 
 @Service
-public class TaskService {
+public class TaskCoordinator {
 
     private final TaskRepository taskRepository;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskCoordinator(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
@@ -38,14 +38,8 @@ public class TaskService {
     }
 
     public Result<Void, TaskTimeApi.ErrorDto> updateTask(Long taskId, TaskTimeApi.UpdateTaskDto updateTaskDto) {
-        return validateExistingTask(taskId)
+        return TaskExistenceChecker.validateExistingTask(taskId, this.findTaskById(taskId))
                 .flatMap(existingTask -> performTaskUpdate(existingTask, updateTaskDto));
-    }
-
-    private Result<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto> validateExistingTask(Long taskId) {
-        return findTaskById(taskId)
-                .map(Result::<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto>success)
-                .orElse(Result.error(new TaskTimeApi.ErrorDto("taskId", "Task with id " + taskId + " does not exist")));
     }
 
     private Result<Void, TaskTimeApi.ErrorDto> performTaskUpdate(TaskTimeApi.TaskDto existingTask, TaskTimeApi.UpdateTaskDto updateTaskDto) {

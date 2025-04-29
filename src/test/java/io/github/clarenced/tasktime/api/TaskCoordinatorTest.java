@@ -2,7 +2,7 @@ package io.github.clarenced.tasktime.api;
 
 import io.github.clarenced.tasktime.common.Result;
 import io.github.clarenced.tasktime.tasks.TaskRepository;
-import io.github.clarenced.tasktime.tasks.TaskService;
+import io.github.clarenced.tasktime.tasks.TaskCoordinator;
 import io.github.clarenced.tasktime.tasks.TaskTimeApi;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,10 @@ import java.util.Optional;
 import static java.util.Optional.of;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskServiceTest {
+public class TaskCoordinatorTest {
 
     private final TaskRepository taskRepository = new TaskRepository();
-    private final TaskService taskService = new TaskService(taskRepository);
+    private final TaskCoordinator taskCoordinator = new TaskCoordinator(taskRepository);
 
 
     @Test
@@ -23,7 +23,7 @@ public class TaskServiceTest {
     void should_create_task_when_validation_succeeds() {
         TaskTimeApi.CreateTaskDto createTaskDto = new TaskTimeApi.CreateTaskDto("Test Task", "Test Description");
 
-        Result<Void, TaskTimeApi.ErrorDto> result = taskService.createTask(createTaskDto);
+        Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.createTask(createTaskDto);
         
         assertTrue(result.isSuccess());
         assertTrue(taskRepository.newTaskIsAdded("Test Task"));
@@ -34,7 +34,7 @@ public class TaskServiceTest {
     void should_not_create_task_when_validation_fails() {
         TaskTimeApi.CreateTaskDto createTaskDto = new TaskTimeApi.CreateTaskDto("", "Test Description");
 
-        Result<Void, TaskTimeApi.ErrorDto> result = taskService.createTask(createTaskDto);
+        Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.createTask(createTaskDto);
         
         assertTrue(result.isError());
         assertEquals("title", result.getError().field());
@@ -48,7 +48,7 @@ public class TaskServiceTest {
         TaskTimeApi.UpdateTaskDto updateTaskDto =
                 new TaskTimeApi.UpdateTaskDto(of("title to be updated"), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE));
 
-        Result<Void, TaskTimeApi.ErrorDto> result = taskService.updateTask(1L, updateTaskDto);
+        Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(1L, updateTaskDto);
         assertTrue(result.isSuccess());
 
         assertTrue(taskRepository.assertThatTitle(1L, "title to be updated"));
@@ -59,7 +59,7 @@ public class TaskServiceTest {
 
     @Test
     void should_not_update_task_when_task_not_found() {
-        Result<Void, TaskTimeApi.ErrorDto> result = taskService.updateTask(10L, new TaskTimeApi.UpdateTaskDto(of("title to be updated"), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE)));
+        Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(10L, new TaskTimeApi.UpdateTaskDto(of("title to be updated"), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE)));
 
         assertTrue(result.isError());
         assertEquals("Task with id 10 does not exist", result.getError().message());
@@ -71,7 +71,7 @@ public class TaskServiceTest {
     @Test
     void should_not_update_task_when_title_is_empty() {
         var updateTaskDto = new TaskTimeApi.UpdateTaskDto(Optional.empty(), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE));
-        Result<Void, TaskTimeApi.ErrorDto> result = taskService.updateTask(1L, updateTaskDto);
+        Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(1L, updateTaskDto);
 
         assertTrue(result.isSuccess());
         assertTrue(taskRepository.assertThatTitle(1L, "Prepare slides for the Spring meetup"));
@@ -83,7 +83,7 @@ public class TaskServiceTest {
     @DisplayName("should not update task when description is empty")
     void should_not_update_task_when_description_is_empty() {
       var updateTaskDto = new TaskTimeApi.UpdateTaskDto(of("title to be updated"), Optional.empty(), of(TaskTimeApi.TaskStatus.DONE));
-      Result<Void, TaskTimeApi.ErrorDto> result = taskService.updateTask(1L, updateTaskDto);
+      Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(1L, updateTaskDto);
       assertTrue(result.isSuccess());
       assertTrue(taskRepository.assertThatTitle(1L, "title to be updated"));
       assertTrue(taskRepository.assertThatDescription(1L, "Prepare slides for the Spring meetup"));
@@ -94,7 +94,7 @@ public class TaskServiceTest {
     @DisplayName("should not update task when status is empty")
     void should_not_update_task_when_status_is_null() {
      var updateTaskDto = new TaskTimeApi.UpdateTaskDto(of("title to be updated"), of("description to be updated"), Optional.empty());
-     Result<Void, TaskTimeApi.ErrorDto> result = taskService.updateTask(1L, updateTaskDto);
+     Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(1L, updateTaskDto);
      assertTrue(result.isSuccess());
      assertTrue(taskRepository.assertThatTitle(1L, "title to be updated"));
      assertTrue(taskRepository.assertThatDescription(1L, "description to be updated"));
@@ -106,7 +106,7 @@ public class TaskServiceTest {
         var updateTaskDto =
                 new TaskTimeApi.UpdateTaskDto(of("title to be updated".repeat(35)), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE));
 
-        Result<Void, TaskTimeApi.ErrorDto> result = taskService.updateTask(1L, updateTaskDto);
+        Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(1L, updateTaskDto);
 
         assertTrue(result.isError());
         assertEquals("title", result.getError().field());

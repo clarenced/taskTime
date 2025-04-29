@@ -11,16 +11,16 @@ public class TaskUpdator {
         Optional<String> title = updateTaskDto.title();
         Optional<String> description = updateTaskDto.description();
         if(title.isPresent() && title.get().length() > 30) {
-            return Result.error(new TaskTimeApi.ErrorDto("title", "title has more than 30 characters"));
+            return Result.error(ErrorFactory.titleHasMoreThan30Characters());
         }
         if(title.isPresent() && title.get().length() <= 5) {
-            return Result.error(new TaskTimeApi.ErrorDto("title", "title must have at least 5 characters"));
+            return Result.error(ErrorFactory.titleHasLessThan5Characters());
         }
         if(description.isPresent() && description.get().length() > 300) {
-            return Result.error(new TaskTimeApi.ErrorDto("description", "description has more than 300 characters"));
+            return Result.error(ErrorFactory.descriptionHasMore300Characters());
         }
         if(description.isPresent() && description.get().length() <= 5) {
-            return Result.error(new TaskTimeApi.ErrorDto("description", "description must have at least 5 characters"));
+            return Result.error(ErrorFactory.descriptionHasLessThan5Characters());
         }
 
         return Result.success(new TaskTimeApi.TaskDto(originalTask.id(),

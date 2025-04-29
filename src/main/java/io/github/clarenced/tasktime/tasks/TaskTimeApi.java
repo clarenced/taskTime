@@ -14,10 +14,10 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class TaskTimeApi {
 
-    private final TaskService taskService;
+    private final TaskCoordinator taskCoordinator;
 
-    public TaskTimeApi(TaskService taskService) {
-        this.taskService = taskService;
+    public TaskTimeApi(TaskCoordinator taskCoordinator) {
+        this.taskCoordinator = taskCoordinator;
     }
 
     public enum TaskStatus {TO_DO, IN_PROGRESS, DONE}
@@ -32,19 +32,19 @@ public class TaskTimeApi {
 
     @GetMapping(value = "/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TaskDto>> getAllTasks(){
-        return ResponseEntity.ok(this.taskService.getTasks());
+        return ResponseEntity.ok(this.taskCoordinator.getTasks());
     }
 
     @GetMapping(value = "/tasks/{taskId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TaskDto> getTaskById(@PathVariable Long taskId){
-        return taskService.findTaskById(taskId)
+        return taskCoordinator.findTaskById(taskId)
                .map(ResponseEntity::ok)
                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(value = "/tasks", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createTask(@RequestBody CreateTaskDto createTaskDto){
-        Result<Void, ErrorDto> result = taskService.createTask(createTaskDto);
+        Result<Void, ErrorDto> result = taskCoordinator.createTask(createTaskDto);
         if(result.isError()){
             return ResponseEntity.badRequest().body(result.getError());
         }
@@ -55,7 +55,7 @@ public class TaskTimeApi {
     @PostMapping(value = "/tasks/{taskId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateTask(@PathVariable Long taskId, @RequestBody UpdateTaskDto createTaskDto){
 
-        Result<Void, ErrorDto> result = this.taskService.updateTask(taskId, createTaskDto);
+        Result<Void, ErrorDto> result = this.taskCoordinator.updateTask(taskId, createTaskDto);
         if(result.isError()){
             return new ResponseEntity<>(result.getError(), HttpStatus.NOT_FOUND);
         }
