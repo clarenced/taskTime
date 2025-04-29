@@ -98,4 +98,15 @@ public class TaskTimeApiTest {
                 .andExpect(jsonPath("$.message").value("description is empty"))
                 .andExpect(jsonPath("$.field").value("description"));
     }
+
+    @Test
+    @DisplayName("should return 404 not found when updating task with unknown id")
+    void should_return_404_not_found_when_updating_task_with_unknown_id(@Autowired MockMvc mockMvc) throws Exception {
+        mockMvc.perform(post("/api/tasks/{taskId}", 4)
+                .contentType("application/json")
+                .content("{\"title\":\"title\",\"description\":\"description\"}"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.message").value("Task not found"));
+    }
 }

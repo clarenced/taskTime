@@ -2,11 +2,14 @@ package io.github.clarenced.tasktime.tasks;
 
 
 import io.github.clarenced.tasktime.common.Result;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -24,6 +27,7 @@ public class TaskTimeApi {
             this(id, title, description, TaskStatus.TO_DO);
         }
     }
+    public record UpdateTaskDto(Optional<String> title, Optional<String> description, Optional<TaskStatus> status){}
     public record CreateTaskDto(String title, String description){}
     public record ErrorDto(String field, String message){}
 
@@ -46,5 +50,12 @@ public class TaskTimeApi {
             return ResponseEntity.badRequest().body(result.getError());
         }
         return result.map(_ -> ResponseEntity.status(201).build()).getSuccess();
+    }
+
+
+    @PostMapping(value = "/tasks/{taskId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateTask(@PathVariable Long taskId, @RequestBody UpdateTaskDto createTaskDto){
+        var error = new ErrorDto("id", "Task not found");
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }
