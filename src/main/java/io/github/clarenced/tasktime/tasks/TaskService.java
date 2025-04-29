@@ -44,17 +44,9 @@ public class TaskService {
         if(task.isEmpty()) {
             return Result.error(new TaskTimeApi.ErrorDto("taskId", "Task not found"));
         }
-        var updatedTask = updateTask(task.get(), createTaskDto);
+        var updatedTask = TaskUpdator.updateTask(task.get(), createTaskDto);
         taskRepository.updateTask(updatedTask);
         return Result.success();
     }
 
-    private TaskTimeApi.TaskDto updateTask(TaskTimeApi.TaskDto originalTask, TaskTimeApi.UpdateTaskDto updateTaskDto) {
-        return new TaskTimeApi.TaskDto(originalTask.id(),
-                updateTaskDto.title().orElse(originalTask.title()),
-                updateTaskDto.description().orElse(originalTask.description()),
-                updateTaskDto.status().orElse(originalTask.status()));
-
-
-    }
 }

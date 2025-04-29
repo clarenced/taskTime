@@ -101,4 +101,15 @@ public class TaskServiceTest {
      assertTrue(taskRepository.assertThatStatus(1L, TaskTimeApi.TaskStatus.TO_DO));
     }
 
+    @Test
+    void should_not_update_task_when_validation_fails() {
+        var updateTaskDto =
+                new TaskTimeApi.UpdateTaskDto(of("title to be updated".repeat(35)), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE));
+
+        Result<Void, TaskTimeApi.ErrorDto> result = taskService.updateTask(1L, updateTaskDto);
+
+        assertTrue(result.isError());
+        assertEquals("title", result.getError().field());
+        assertEquals("title has more than 30 characters", result.getError().message());
+    }
 }
