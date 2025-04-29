@@ -19,6 +19,9 @@ public class TaskUpdator {
         if(description.isPresent() && description.get().length() > 300) {
             return Result.error(new TaskTimeApi.ErrorDto("description", "description has more than 300 characters"));
         }
+        if(description.isPresent() && description.get().length() <= 5) {
+            return Result.error(new TaskTimeApi.ErrorDto("description", "description must have at least 5 characters"));
+        }
 
         return Result.success(new TaskTimeApi.TaskDto(originalTask.id(),
                 updateTaskDto.title().orElse(originalTask.title()),
