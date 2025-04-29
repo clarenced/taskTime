@@ -39,20 +39,24 @@ public class TaskService {
                 .findFirst();
     }
 
-    public Result<Void, TaskTimeApi.ErrorDto> updateTask(Long taskId, TaskTimeApi.UpdateTaskDto createTaskDto) {
-        Optional<TaskTimeApi.TaskDto> task = findTaskById(taskId);
-        if(task.isEmpty()) {
-            return Result.error(new TaskTimeApi.ErrorDto("taskId", "Task not found"));
-        }
-        var updatedTask = TaskUpdator.updateTask(task.get(), createTaskDto);
-        if(updatedTask.isError()) {
-            return Result.error(updatedTask.getError());
-        }
+    public Result<Void, TaskTimeApi.ErrorDto> updateTask(Long taskId, TaskTimeApi.UpdateTaskDto updateTaskDto) {
+        return validateExistingTask(taskId)
+                .flatMap(existingTask -> performTaskUpdate(existingTask, updateTaskDto));
 
-        return updatedTask.map(_ -> {
-            taskRepository.updateTask(updatedTask.getSuccess());
-            return null;
-        });
     }
 
-}
+    private Result<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto> validateExistingTask(Long taskId) {
+        return findTaskById(taskId)
+                .map(Result::<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto>success)
+                .orElse(Result.error(new TaskTimeApi.ErrorDto("taskId", "Task with id " + taskId + " does not exist")));
+    }
+
+    private Result<Void, TaskTimeApi.ErrorDto> performTaskUpdate(TaskTimeApi.TaskDto existingTask,
+                                                                 TaskTimeApi.UpdateTaskDto updateTaskDto) {
+        return TaskUpdator.updateTask(existingTask, updateTaskDto)
+                .map(updatedTask -> {
+                    taskRepository.updateTask(updatedTask);
+                    return null;
+                });
+    }
+    }

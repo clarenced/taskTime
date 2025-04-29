@@ -104,6 +104,21 @@ public class Result<S, E> {
         return Result.error(errorValue);
     }
 
+    /* If this result is an error, the error is propagated.
+    * If this result is a success, the mapper function is applied to create a new Result.
+    *
+         * @param mapper The function to map the success value to a new Result
+    * @param <T> The type of the new success value
+    * @return A new Result from the mapper function, or the same error if this result is an error
+    */
+    public <T> Result<T, E> flatMap(Function<S, Result<T, E>> mapper) {
+        if (isSuccess) {
+            return mapper.apply(successValue);
+        }
+        return Result.error(errorValue);
+    }
+
+
     /**
      * Executes the given consumer if this result is a success.
      * @param consumer The consumer to execute

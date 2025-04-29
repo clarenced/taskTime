@@ -100,7 +100,7 @@ public class TaskTimeApiTest {
                 .content("{\"title\":\"title\",\"description\":\"description\"}"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.message").value("Task not found"));
+                .andExpect(jsonPath("$.message").value("Task with id 4 does not exist"));
     }
 
     @Test

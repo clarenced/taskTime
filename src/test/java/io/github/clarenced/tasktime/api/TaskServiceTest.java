@@ -62,7 +62,7 @@ public class TaskServiceTest {
         Result<Void, TaskTimeApi.ErrorDto> result = taskService.updateTask(10L, new TaskTimeApi.UpdateTaskDto(of("title to be updated"), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE)));
 
         assertTrue(result.isError());
-        assertEquals("Task not found", result.getError().message());
+        assertEquals("Task with id 10 does not exist", result.getError().message());
         assertEquals("taskId", result.getError().field());
         assertTrue(taskRepository.noNewTaskIsCreated());
     }
