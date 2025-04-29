@@ -60,6 +60,5 @@ public class TaskTimeApi {
             return new ResponseEntity<>(result.getError(), HttpStatus.NOT_FOUND);
         }
         return result.map(_ -> ResponseEntity.ok().build()).getSuccess();
-
     }
 }

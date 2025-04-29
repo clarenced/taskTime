@@ -72,4 +72,10 @@ public class TaskRepository {
                 .map(taskDto -> taskDto.status().equals(taskStatus))
                 .orElse(false);
     }
+
+    public Optional<TaskTimeApi.TaskDto> findTaskById(Long taskId) {
+        return getTasks().stream()
+                .filter(task -> task.id().equals(taskId))
+                .findFirst();
+    }
 }

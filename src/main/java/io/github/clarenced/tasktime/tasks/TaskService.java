@@ -34,15 +34,12 @@ public class TaskService {
     }
 
     public Optional<TaskTimeApi.TaskDto> findTaskById(Long taskId) {
-        return getTasks().stream()
-                .filter(task -> task.id().equals(taskId))
-                .findFirst();
+        return this.taskRepository.findTaskById(taskId);
     }
 
     public Result<Void, TaskTimeApi.ErrorDto> updateTask(Long taskId, TaskTimeApi.UpdateTaskDto updateTaskDto) {
         return validateExistingTask(taskId)
                 .flatMap(existingTask -> performTaskUpdate(existingTask, updateTaskDto));
-
     }
 
     private Result<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto> validateExistingTask(Long taskId) {
@@ -51,12 +48,11 @@ public class TaskService {
                 .orElse(Result.error(new TaskTimeApi.ErrorDto("taskId", "Task with id " + taskId + " does not exist")));
     }
 
-    private Result<Void, TaskTimeApi.ErrorDto> performTaskUpdate(TaskTimeApi.TaskDto existingTask,
-                                                                 TaskTimeApi.UpdateTaskDto updateTaskDto) {
+    private Result<Void, TaskTimeApi.ErrorDto> performTaskUpdate(TaskTimeApi.TaskDto existingTask, TaskTimeApi.UpdateTaskDto updateTaskDto) {
         return TaskUpdator.updateTask(existingTask, updateTaskDto)
                 .map(updatedTask -> {
                     taskRepository.updateTask(updatedTask);
                     return null;
                 });
     }
-    }
+}
