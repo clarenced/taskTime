@@ -33,9 +33,28 @@ public class TaskService {
         return this.taskRepository.getTasks();
     }
 
-    public Optional<TaskTimeApi.TaskDto> findTaskById(int taskId) {
+    public Optional<TaskTimeApi.TaskDto> findTaskById(Long taskId) {
         return getTasks().stream()
-                .filter(task -> task.id() == taskId)
+                .filter(task -> task.id().equals(taskId))
                 .findFirst();
+    }
+
+    public Result<Void, TaskTimeApi.ErrorDto> updateTask(Long taskId, TaskTimeApi.UpdateTaskDto createTaskDto) {
+        Optional<TaskTimeApi.TaskDto> task = findTaskById(taskId);
+        if(task.isEmpty()) {
+            return Result.error(new TaskTimeApi.ErrorDto("taskId", "Task not found"));
+        }
+        var updatedTask = updateTask(task.get(), createTaskDto);
+        taskRepository.updateTask(updatedTask);
+        return Result.success();
+    }
+
+    private TaskTimeApi.TaskDto updateTask(TaskTimeApi.TaskDto originalTask, TaskTimeApi.UpdateTaskDto updateTaskDto) {
+        return new TaskTimeApi.TaskDto(originalTask.id(),
+                updateTaskDto.title().orElse(originalTask.title()),
+                updateTaskDto.description().orElse(originalTask.description()),
+                updateTaskDto.status().orElse(originalTask.status()));
+
+
     }
 }
