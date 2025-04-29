@@ -73,6 +73,18 @@ class TaskUpdatorTest {
         assertTrue(result.isError());
         assertEquals("title", result.getError().field());
         assertEquals("title has more than 30 characters", result.getError().message());
+    }
 
+    @Test
+    void should_not_update_task_when_title_is_too_short () {
+        var updateTaskDto =
+                new TaskTimeApi.UpdateTaskDto(of("tit"), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE));
+        var originalTask = new TaskTimeApi.TaskDto(1L, "Original Task", "original Description");
+
+        Result<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto> result = TaskUpdator.updateTask(originalTask, updateTaskDto);
+
+        assertTrue(result.isError());
+        assertEquals("title", result.getError().field());
+        assertEquals("title must have at least 5 characters", result.getError().message());
     }
 }
