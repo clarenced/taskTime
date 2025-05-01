@@ -21,16 +21,16 @@ public class TaskCoordinator {
      * @param createTaskDto The task creation request
      * @return A Result indicating success or containing an error
      */
-    //TODO refactor the validateTask ->
-    // Instead create a factory method in Task.create(title, description, status) that returns Result<Error, Task>
-    // Validate the task creation in this method
-    // If validation succeeds -> taskRepository.createTask(task)
     public Result<Void, TaskTimeApi.ErrorDto> createTask(TaskTimeApi.CreateTaskDto createTaskDto) {
-        return TaskValidator.validateTask(createTaskDto)
-                .map(validDto -> {
-                    taskRepository.createTask(validDto);
-                    return null;
-                });
+        Result<Task, Error> taskResult = Task.create(createTaskDto.title(), createTaskDto.description(), TaskStatus.TO_DO);
+
+        if (taskResult.isError()) {
+            Error error = taskResult.getError();
+            return Result.error(new TaskTimeApi.ErrorDto(error.field(), error.message()));
+        }
+        Task task = taskResult.getSuccess();
+        taskRepository.createTask(task);
+        return Result.success(null);
     }
 
     public List<TaskTimeApi.TaskDto> getTasks() {

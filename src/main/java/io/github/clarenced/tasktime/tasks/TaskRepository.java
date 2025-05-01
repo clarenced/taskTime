@@ -17,10 +17,10 @@ public class TaskRepository {
         tasks.add(new TaskTimeApi.TaskDto(3L, "Go to the theater", "Go to the theater"));
     }
 
-    void createTask(TaskTimeApi.CreateTaskDto createTaskDto) {
+    void createTask(Task task) {
         var taskId = (long) this.tasks.size() + 1;
-        var task = new TaskTimeApi.TaskDto(taskId, createTaskDto.title(), createTaskDto.description());
-        this.tasks.add(task);
+        var taskDto = new TaskTimeApi.TaskDto(taskId, task.getTitle(), task.getDescription());
+        this.tasks.add(taskDto);
     }
 
     public List<TaskTimeApi.TaskDto> getTasks() {
