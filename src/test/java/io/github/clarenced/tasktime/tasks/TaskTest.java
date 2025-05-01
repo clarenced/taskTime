@@ -1,6 +1,9 @@
 package io.github.clarenced.tasktime.tasks;
 
 import io.github.clarenced.tasktime.common.Result;
+import io.github.clarenced.tasktime.tasks.domain.Error;
+import io.github.clarenced.tasktime.tasks.domain.Task;
+import io.github.clarenced.tasktime.tasks.domain.TaskStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

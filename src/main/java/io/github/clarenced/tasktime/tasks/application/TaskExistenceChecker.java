@@ -1,6 +1,8 @@
-package io.github.clarenced.tasktime.tasks;
+package io.github.clarenced.tasktime.tasks.application;
 
 import io.github.clarenced.tasktime.common.Result;
+import io.github.clarenced.tasktime.tasks.api.ErrorFactory;
+import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
 
 import java.util.Optional;
 
@@ -14,7 +16,7 @@ public class TaskExistenceChecker {
      * @param retrievedTaskOptional The task retrieved from the repository
      * @return A Result containing either the validated TaskDto or an ErrorDto
      */
-    static Result<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto> validateExistingTask(Long taskId, Optional<TaskTimeApi.TaskDto> retrievedTaskOptional) {
+    public static Result<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto> validateExistingTask(Long taskId, Optional<TaskTimeApi.TaskDto> retrievedTaskOptional) {
         return retrievedTaskOptional
                 .map(Result::<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto>success)
                 .orElse(Result.error(ErrorFactory.taskNotFound(taskId)));

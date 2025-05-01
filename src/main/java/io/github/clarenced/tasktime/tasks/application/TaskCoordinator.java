@@ -1,6 +1,11 @@
-package io.github.clarenced.tasktime.tasks;
+package io.github.clarenced.tasktime.tasks.application;
 
 import io.github.clarenced.tasktime.common.Result;
+import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
+import io.github.clarenced.tasktime.tasks.domain.Error;
+import io.github.clarenced.tasktime.tasks.domain.Task;
+import io.github.clarenced.tasktime.tasks.domain.TaskStatus;
+import io.github.clarenced.tasktime.tasks.infrastructure.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +27,7 @@ public class TaskCoordinator {
      * @return A Result indicating success or containing an error
      */
     public Result<Void, TaskTimeApi.ErrorDto> createTask(TaskTimeApi.CreateTaskDto createTaskDto) {
-        Result<Task, Error> taskResult = Task.create(createTaskDto.title(), createTaskDto.description(), TaskStatus.TO_DO);
+        Result<Task, io.github.clarenced.tasktime.tasks.domain.Error> taskResult = Task.create(createTaskDto.title(), createTaskDto.description(), TaskStatus.TO_DO);
 
         if (taskResult.isError()) {
             Error error = taskResult.getError();

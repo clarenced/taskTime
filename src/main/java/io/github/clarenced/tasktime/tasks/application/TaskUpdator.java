@@ -1,13 +1,15 @@
-package io.github.clarenced.tasktime.tasks;
+package io.github.clarenced.tasktime.tasks.application;
 
 import io.github.clarenced.tasktime.common.Result;
+import io.github.clarenced.tasktime.tasks.api.ErrorFactory;
+import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
 
 import java.util.Optional;
 
 public class TaskUpdator {
 
 
-    static Result<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto> updateTask(TaskTimeApi.TaskDto originalTask, TaskTimeApi.UpdateTaskDto updateTaskDto) {
+    public static Result<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto> updateTask(TaskTimeApi.TaskDto originalTask, TaskTimeApi.UpdateTaskDto updateTaskDto) {
         Optional<String> title = updateTaskDto.title();
         Optional<String> description = updateTaskDto.description();
         if(title.isPresent() && title.get().length() > 30) {

@@ -1,9 +1,9 @@
 package io.github.clarenced.tasktime.api;
 
 import io.github.clarenced.tasktime.common.Result;
-import io.github.clarenced.tasktime.tasks.TaskRepository;
-import io.github.clarenced.tasktime.tasks.TaskCoordinator;
-import io.github.clarenced.tasktime.tasks.TaskTimeApi;
+import io.github.clarenced.tasktime.tasks.infrastructure.TaskRepository;
+import io.github.clarenced.tasktime.tasks.application.TaskCoordinator;
+import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

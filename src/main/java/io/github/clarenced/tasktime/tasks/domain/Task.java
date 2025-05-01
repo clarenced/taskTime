@@ -1,10 +1,8 @@
-package io.github.clarenced.tasktime.tasks;
+package io.github.clarenced.tasktime.tasks.domain;
 
 import io.github.clarenced.tasktime.common.Result;
 
 import java.util.Objects;
-
-enum TaskStatus {TO_DO, IN_PROGRESS, DONE}
 
 public final class Task {
     private static final int TITLE_MAXIMUM_LENGTH = 30;
@@ -27,10 +25,6 @@ public final class Task {
         this.title = title;
         this.description = description;
         this.status = status;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getTitle() {

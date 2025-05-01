@@ -1,5 +1,7 @@
-package io.github.clarenced.tasktime.tasks;
+package io.github.clarenced.tasktime.tasks.infrastructure;
 
+import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
+import io.github.clarenced.tasktime.tasks.domain.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ public class TaskRepository {
         tasks.add(new TaskTimeApi.TaskDto(3L, "Go to the theater", "Go to the theater"));
     }
 
-    void createTask(Task task) {
+    public void createTask(Task task) {
         var taskId = (long) this.tasks.size() + 1;
         var taskDto = new TaskTimeApi.TaskDto(taskId, task.getTitle(), task.getDescription());
         this.tasks.add(taskDto);
