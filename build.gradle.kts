@@ -16,7 +16,7 @@ dependencies {
     // Spring Boot starters
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     // PostgreSQL et Flyway
     implementation("org.postgresql:postgresql:42.7.1")
@@ -41,4 +41,13 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.register<Test>("integrationTest") {
+    description = "Runs integration tests."
+    group = "verification"
+
+    useJUnitPlatform {
+        includeTags("integration")
+    }
 }

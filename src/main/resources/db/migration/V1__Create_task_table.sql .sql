@@ -1,6 +1,14 @@
 -- V1__Create_task_table.sql
 CREATE TYPE task_status AS ENUM ('TO_DO', 'IN_PROGRESS', 'DONE');
 
+CREATE SEQUENCE task_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
 CREATE TABLE task (
   id BIGSERIAL PRIMARY KEY,
   title VARCHAR(30) NOT NULL,
