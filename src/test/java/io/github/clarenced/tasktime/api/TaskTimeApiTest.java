@@ -45,7 +45,7 @@ public class TaskTimeApiTest {
     @Test
     @DisplayName("Should return 404 when task not found")
     void should_return_404_when_task_not_found(@Autowired MockMvc mockMvc) throws Exception {
-        mockMvc.perform(get("/api/tasks/{taskId}", 4))
+        mockMvc.perform(get("/api/tasks/{taskId}", 5))
                 .andExpect(status().isNotFound());
     }
 

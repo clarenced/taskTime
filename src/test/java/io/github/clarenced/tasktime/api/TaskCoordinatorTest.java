@@ -1,7 +1,7 @@
 package io.github.clarenced.tasktime.api;
 
 import io.github.clarenced.tasktime.common.Result;
-import io.github.clarenced.tasktime.tasks.infrastructure.TaskRepository;
+import io.github.clarenced.tasktime.tasks.infrastructure.FakeTaskRepository;
 import io.github.clarenced.tasktime.tasks.application.TaskCoordinator;
 import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
 import org.junit.jupiter.api.DisplayName;
@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskCoordinatorTest {
 
-    private final TaskRepository taskRepository = new TaskRepository();
-    private final TaskCoordinator taskCoordinator = new TaskCoordinator(taskRepository);
+    private final FakeTaskRepository fakeTaskRepository = new FakeTaskRepository();
+    private final TaskCoordinator taskCoordinator = new TaskCoordinator(fakeTaskRepository);
 
 
     @Test
@@ -26,7 +26,7 @@ public class TaskCoordinatorTest {
         Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.createTask(createTaskDto);
         
         assertTrue(result.isSuccess());
-        assertTrue(taskRepository.newTaskIsAdded("Test Task"));
+        assertTrue(fakeTaskRepository.newTaskIsAdded("Test Task"));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class TaskCoordinatorTest {
         assertTrue(result.isError());
         assertEquals("title", result.getError().field());
         assertEquals("title is empty", result.getError().message());
-        assertTrue(taskRepository.noNewTaskIsCreated());
+        assertTrue(fakeTaskRepository.noNewTaskIsCreated());
     }
 
     @Test
@@ -51,9 +51,9 @@ public class TaskCoordinatorTest {
         Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(1L, updateTaskDto);
         assertTrue(result.isSuccess());
 
-        assertTrue(taskRepository.assertThatTitle(1L, "title to be updated"));
-        assertTrue(taskRepository.assertThatDescription(1L, "description to be updated"));
-        assertTrue(taskRepository.assertThatStatus(1L, TaskTimeApi.TaskStatus.DONE));
+        assertTrue(fakeTaskRepository.assertThatTitle(1L, "title to be updated"));
+        assertTrue(fakeTaskRepository.assertThatDescription(1L, "description to be updated"));
+        assertTrue(fakeTaskRepository.assertThatStatus(1L, TaskTimeApi.TaskStatus.DONE));
     }
 
 
@@ -64,7 +64,7 @@ public class TaskCoordinatorTest {
         assertTrue(result.isError());
         assertEquals("Task with id 10 does not exist", result.getError().message());
         assertEquals("taskId", result.getError().field());
-        assertTrue(taskRepository.noNewTaskIsCreated());
+        assertTrue(fakeTaskRepository.noNewTaskIsCreated());
     }
 
 
@@ -74,9 +74,9 @@ public class TaskCoordinatorTest {
         Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(1L, updateTaskDto);
 
         assertTrue(result.isSuccess());
-        assertTrue(taskRepository.assertThatTitle(1L, "Prepare slides for the Spring meetup"));
-        assertTrue(taskRepository.assertThatDescription(1L, "description to be updated"));
-        assertTrue(taskRepository.assertThatStatus(1L, TaskTimeApi.TaskStatus.DONE));
+        assertTrue(fakeTaskRepository.assertThatTitle(1L, "Prepare slides for the Spring meetup"));
+        assertTrue(fakeTaskRepository.assertThatDescription(1L, "description to be updated"));
+        assertTrue(fakeTaskRepository.assertThatStatus(1L, TaskTimeApi.TaskStatus.DONE));
     }
 
     @Test
@@ -85,9 +85,9 @@ public class TaskCoordinatorTest {
       var updateTaskDto = new TaskTimeApi.UpdateTaskDto(of("title to be updated"), Optional.empty(), of(TaskTimeApi.TaskStatus.DONE));
       Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(1L, updateTaskDto);
       assertTrue(result.isSuccess());
-      assertTrue(taskRepository.assertThatTitle(1L, "title to be updated"));
-      assertTrue(taskRepository.assertThatDescription(1L, "Prepare slides for the Spring meetup"));
-      assertTrue(taskRepository.assertThatStatus(1L, TaskTimeApi.TaskStatus.DONE));
+      assertTrue(fakeTaskRepository.assertThatTitle(1L, "title to be updated"));
+      assertTrue(fakeTaskRepository.assertThatDescription(1L, "Prepare slides for the Spring meetup"));
+      assertTrue(fakeTaskRepository.assertThatStatus(1L, TaskTimeApi.TaskStatus.DONE));
     }
 
     @Test
@@ -96,9 +96,9 @@ public class TaskCoordinatorTest {
      var updateTaskDto = new TaskTimeApi.UpdateTaskDto(of("title to be updated"), of("description to be updated"), Optional.empty());
      Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(1L, updateTaskDto);
      assertTrue(result.isSuccess());
-     assertTrue(taskRepository.assertThatTitle(1L, "title to be updated"));
-     assertTrue(taskRepository.assertThatDescription(1L, "description to be updated"));
-     assertTrue(taskRepository.assertThatStatus(1L, TaskTimeApi.TaskStatus.TO_DO));
+     assertTrue(fakeTaskRepository.assertThatTitle(1L, "title to be updated"));
+     assertTrue(fakeTaskRepository.assertThatDescription(1L, "description to be updated"));
+     assertTrue(fakeTaskRepository.assertThatStatus(1L, TaskTimeApi.TaskStatus.TO_DO));
     }
 
     @Test

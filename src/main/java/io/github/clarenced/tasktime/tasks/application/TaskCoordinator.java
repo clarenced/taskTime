@@ -5,7 +5,7 @@ import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
 import io.github.clarenced.tasktime.tasks.domain.Error;
 import io.github.clarenced.tasktime.tasks.domain.Task;
 import io.github.clarenced.tasktime.tasks.domain.TaskStatus;
-import io.github.clarenced.tasktime.tasks.infrastructure.TaskRepository;
+import io.github.clarenced.tasktime.tasks.infrastructure.FakeTaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +15,9 @@ import java.util.Optional;
 @Service
 public class TaskCoordinator {
 
-    private final TaskRepository taskRepository;
+    private final FakeTaskRepository taskRepository;
 
-    public TaskCoordinator(TaskRepository taskRepository) {
+    public TaskCoordinator(FakeTaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
@@ -35,7 +35,7 @@ public class TaskCoordinator {
         }
         Task task = taskResult.getSuccess();
         taskRepository.createTask(task);
-        return Result.success(null);
+        return Result.success();
     }
 
     public List<TaskTimeApi.TaskDto> getTasks() {
@@ -47,7 +47,7 @@ public class TaskCoordinator {
     }
 
     public Result<Void, TaskTimeApi.ErrorDto> updateTask(Long taskId, TaskTimeApi.UpdateTaskDto updateTaskDto) {
-        return TaskExistenceChecker.validateExistingTask(taskId, this.findTaskById(taskId))
+        return TaskExistenceChecker.validateExistingTask(taskId, findTaskById(taskId))
                 .flatMap(existingTask -> performTaskUpdate(existingTask, updateTaskDto));
     }
 
