@@ -33,9 +33,9 @@ class TaskTest {
         @Test
         @DisplayName("Should return error when title is too long")
         void should_return_error_when_title_is_too_long() {
-            var longTitle = "Create a new Unit test".repeat(35);
+            var longTitle = "Create a new Unit test".repeat(60);
             var result = Task.create(longTitle, VALID_DESCRIPTION, TaskStatus.TO_DO);
-            assertValidationError(result, "title", "title has more than 30 characters");
+            assertValidationError(result, "title", "title has more than 50 characters");
         }
 
         @Test

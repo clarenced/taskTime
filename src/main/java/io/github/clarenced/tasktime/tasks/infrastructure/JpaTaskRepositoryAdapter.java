@@ -1,7 +1,7 @@
 package io.github.clarenced.tasktime.tasks.infrastructure;
 
-import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
 import io.github.clarenced.tasktime.tasks.domain.Task;
+import io.github.clarenced.tasktime.tasks.domain.TaskStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,17 +23,17 @@ public class JpaTaskRepositoryAdapter implements TaskRepository {
     }
 
     @Override
-    public List<TaskTimeApi.TaskDto> getTasks() {
+    public List<Task> getTasks() {
         return List.of();
     }
 
     @Override
-    public void updateTask(TaskTimeApi.TaskDto updatedTask) {
-
+    public void updateTask(Task updatedTask) {
+        // Implementation to be added
     }
 
     @Override
-    public Optional<TaskTimeApi.TaskDto> findTaskById(Long taskId) {
+    public Optional<Task> findTaskById(Long taskId) {
         return Optional.empty();
     }
 }

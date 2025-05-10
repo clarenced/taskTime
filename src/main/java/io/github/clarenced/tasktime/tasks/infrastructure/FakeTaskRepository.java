@@ -1,85 +1,86 @@
 package io.github.clarenced.tasktime.tasks.infrastructure;
 
-import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
+import io.github.clarenced.tasktime.common.Result;
 import io.github.clarenced.tasktime.tasks.domain.Task;
+import io.github.clarenced.tasktime.tasks.domain.TaskStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 
 @Service
 public class FakeTaskRepository implements TaskRepository {
-    private final List<TaskTimeApi.TaskDto> tasks;
+    private final List<Task> tasks;
 
     public FakeTaskRepository() {
         this.tasks = new ArrayList<>();
-        tasks.add(new TaskTimeApi.TaskDto(1L, "Prepare slides for the Spring meetup", "Prepare slides for the Spring meetup"));
-        tasks.add(new TaskTimeApi.TaskDto(3L, "Go to the theater", "Go to the theater"));
+        var task1 = Task.create(1L, "Prepare slides for the Spring meetup", "Prepare slides for the Spring meetup", TaskStatus.TO_DO);
+        var task2 = Task.create(3L, "Go to the theater", "Go to the theater", TaskStatus.TO_DO);
+        tasks.add(task1.getSuccess());
+        tasks.add(task2.getSuccess());
     }
 
     @Override
     public void createTask(Task task) {
-        var taskId = tasks.stream().map(TaskTimeApi.TaskDto::id).max(Comparator.naturalOrder()).orElse(0L) + 1;
-        var taskDto = new TaskTimeApi.TaskDto(taskId, task.getTitle(), task.getDescription());
-        this.tasks.add(taskDto);
+        this.tasks.add(task);
     }
 
     @Override
-    public List<TaskTimeApi.TaskDto> getTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 
     public boolean newTaskIsAdded(String testTask) {
-        return getTasks().stream().anyMatch(task -> task.title().equals(testTask));
+        return getTasks().stream().anyMatch(task -> task.getTitle().equals(testTask));
     }
 
     public boolean noNewTaskIsCreated() {
+        // The initial repository has 2 tasks
         return this.tasks.size() == 2;
     }
 
     @Override
-    public void updateTask(TaskTimeApi.TaskDto updatedTask) {
-        Optional<TaskTimeApi.TaskDto> taskDto = getTasks().stream()
-                .filter(task -> task.id().equals(updatedTask.id()))
+    public void updateTask(Task updatedTask) {
+        Optional<Task> task = getTasks().stream()
+                .filter(t -> t.getId().equals(updatedTask.getId()))
                 .findFirst();
 
-        taskDto.ifPresent(dto -> this.tasks.set(this.tasks.indexOf(dto), updatedTask));
-        throw new IllegalArgumentException("Task with id " + updatedTask.id() + " does not exist");
-
+        if (task.isPresent()) {
+            this.tasks.set(this.tasks.indexOf(task.get()), updatedTask);
+        }
+        // If the task doesn't exist, do nothing
     }
 
     public boolean assertThatTitle(Long taskId, String titleToBeUpdated) {
         return getTasks().stream()
-                .filter(taskDto -> taskDto.id().equals(taskId))
+                .filter(task -> task.getId().equals(taskId))
                 .findFirst()
-                .map(taskDto -> taskDto.title().equals(titleToBeUpdated))
+                .map(task -> task.getTitle().equals(titleToBeUpdated))
                 .orElse(false);
-
     }
 
     public boolean assertThatDescription(long taskId, String descriptionToBeUpdated) {
         return getTasks().stream()
-                .filter(taskDto -> taskDto.id().equals(taskId))
+                .filter(task -> task.getId().equals(taskId))
                 .findFirst()
-                .map(taskDto -> taskDto.description().equals(descriptionToBeUpdated))
+                .map(task -> task.getDescription().equals(descriptionToBeUpdated))
                 .orElse(false);
     }
 
-    public boolean assertThatStatus(long taskId, TaskTimeApi.TaskStatus taskStatus) {
+    public boolean assertThatStatus(long taskId, io.github.clarenced.tasktime.tasks.api.TaskTimeApi.TaskStatus taskStatus) {
         return getTasks().stream()
-                .filter(taskDto -> taskDto.id().equals(taskId))
+                .filter(task -> task.getId().equals(taskId))
                 .findFirst()
-                .map(taskDto -> taskDto.status().equals(taskStatus))
+                .map(task -> task.getStatus().name().equals(taskStatus.name()))
                 .orElse(false);
     }
 
     @Override
-    public Optional<TaskTimeApi.TaskDto> findTaskById(Long taskId) {
+    public Optional<Task> findTaskById(Long taskId) {
         return getTasks().stream()
-                .filter(task -> task.id().equals(taskId))
+                .filter(task -> task.getId().equals(taskId))
                 .findFirst();
     }
 }
