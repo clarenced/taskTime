@@ -3,6 +3,7 @@ package io.github.clarenced.tasktime.tasks.infrastructure;
 import io.github.clarenced.tasktime.common.Result;
 import io.github.clarenced.tasktime.tasks.domain.Task;
 import io.github.clarenced.tasktime.tasks.domain.TaskStatus;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Optional;
 
 
 @Service
+@ConditionalOnProperty(name = "use.real.database", havingValue = "false")
 public class FakeTaskRepository implements TaskRepository {
     private final List<Task> tasks;
 

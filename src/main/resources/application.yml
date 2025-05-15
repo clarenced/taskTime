@@ -19,10 +19,13 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         format_sql: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: taskTime
 
   flyway:
     enabled: true
@@ -32,3 +35,7 @@ spring:
     schemas: taskTime
     clean-disabled: true
     validate-on-migrate: true
+
+use:
+  real:
+    database: true

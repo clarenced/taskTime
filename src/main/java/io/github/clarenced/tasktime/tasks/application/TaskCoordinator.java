@@ -6,6 +6,7 @@ import io.github.clarenced.tasktime.tasks.domain.Error;
 import io.github.clarenced.tasktime.tasks.domain.Task;
 import io.github.clarenced.tasktime.tasks.domain.TaskStatus;
 import io.github.clarenced.tasktime.tasks.infrastructure.FakeTaskRepository;
+import io.github.clarenced.tasktime.tasks.infrastructure.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +17,9 @@ import java.util.stream.Collectors;
 @Service
 public class TaskCoordinator {
 
-    private final FakeTaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
-    public TaskCoordinator(FakeTaskRepository taskRepository) {
+    public TaskCoordinator(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 

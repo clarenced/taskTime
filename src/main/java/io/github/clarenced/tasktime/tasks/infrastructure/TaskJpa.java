@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.Objects;
 
 @Entity
-@Table(name = "task")
+@Table(name = "task", schema = "taskTime")
 public class TaskJpa {
 
     @Id
@@ -23,22 +23,6 @@ public class TaskJpa {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private TaskStatusJpa status;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
-
-    @Column(name = "updated_at")
-    private Instant updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = Instant.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = Instant.now();
-    }
 
     // Constructeurs
     protected TaskJpa() {
@@ -68,13 +52,6 @@ public class TaskJpa {
         return status;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
 
     // Setters
     public void setTitle(String title) {
