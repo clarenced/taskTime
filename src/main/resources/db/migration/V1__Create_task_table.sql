@@ -14,12 +14,12 @@ CREATE SEQUENCE task_time.task_seq
 
 CREATE TABLE task_time.task (
   id BIGSERIAL PRIMARY KEY,
-  title VARCHAR(30) NOT NULL,
-  description VARCHAR(300) NOT NULL,
+  title VARCHAR(100) NOT NULL,
+  description VARCHAR(500) NOT NULL,
   status task_time.task_status NOT NULL,
 
   CONSTRAINT check_title_not_empty CHECK (LENGTH(TRIM(title)) > 0),
-  CONSTRAINT check_title_length CHECK (LENGTH(TRIM(title)) BETWEEN 5 AND 30),
+  CONSTRAINT check_title_length CHECK (LENGTH(TRIM(title)) BETWEEN 5 AND 100),
   CONSTRAINT check_description_not_empty CHECK (LENGTH(TRIM(description)) > 0),
-  CONSTRAINT check_description_length CHECK (LENGTH(TRIM(description)) BETWEEN 5 AND 300)
+  CONSTRAINT check_description_length CHECK (LENGTH(TRIM(description)) BETWEEN 5 AND 500)
 );

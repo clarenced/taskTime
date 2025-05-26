@@ -1,6 +1,8 @@
 package io.github.clarenced.tasktime.tasks.infrastructure;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -11,7 +13,7 @@ public class TaskJpa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_seq")
-    @SequenceGenerator(name = "task_seq", sequenceName = "task_seq", allocationSize = 1)
+    @SequenceGenerator(name = "task_seq", sequenceName = "task_time.task_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "title", length = 30, nullable = false)
@@ -21,7 +23,8 @@ public class TaskJpa {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false, columnDefinition = "task_time.task_status")
+    @JdbcType(value = PostgreSQLEnumJdbcType.class)
     private TaskStatusJpa status;
 
     // Constructeurs
@@ -79,4 +82,3 @@ public class TaskJpa {
         return Objects.hash(id);
     }
 }
-

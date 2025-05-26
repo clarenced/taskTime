@@ -5,9 +5,9 @@ import io.github.clarenced.tasktime.common.Result;
 import java.util.Objects;
 
 public final class Task {
-    private static final int TITLE_MAXIMUM_LENGTH = 50;
+    private static final int TITLE_MAXIMUM_LENGTH = 100;
     private static final int TITLE_MINIMAL_LENGTH = 5;
-    private static final int DESCRIPTION_MAXIMUM_LENGTH = 300;
+    private static final int DESCRIPTION_MAXIMUM_LENGTH = 500;
     private static final int DESCRIPTION_MINIMUM_LENGTH = 5;
 
     private final Long id;
@@ -52,7 +52,7 @@ public final class Task {
             return Result.error(new Error("title", "title is empty"));
         }
         if(title.length() > TITLE_MAXIMUM_LENGTH) {
-            return Result.error(new Error("title", "title has more than 50 characters"));
+            return Result.error(new Error("title", "title has more than 100 characters"));
         }
         if(title.length() < TITLE_MINIMAL_LENGTH) {
             return Result.error(new Error("title", "title must have at least 5 characters"));
@@ -61,7 +61,7 @@ public final class Task {
             return Result.error(new Error("description", "description is empty"));
         }
         if(description.length() > DESCRIPTION_MAXIMUM_LENGTH) {
-            return Result.error(new Error("description", "description has more than 300 characters"));
+            return Result.error(new Error("description", "description has more than 500 characters"));
         }
         if(description.length() < DESCRIPTION_MINIMUM_LENGTH) {
             return Result.error(new Error("description", "description must have at least 5 characters"));

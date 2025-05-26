@@ -38,6 +38,7 @@ public class TaskTimeApiTest {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
+
     @Test
     @DisplayName("Should return list of current tasks")
     void should_return_list_current_tasks(@Autowired MockMvc mockMvc) throws Exception {
@@ -56,12 +57,12 @@ public class TaskTimeApiTest {
     @Test
     @DisplayName("Should return task by id")
     void should_return_task_by_id(@Autowired MockMvc mockMvc) throws Exception {
-        mockMvc.perform(get("/api/tasks/{taskId}", 3))
+        mockMvc.perform(get("/api/tasks/{taskId}", 2))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.title").value("Go to the theater"))
                 .andExpect(jsonPath("$.description").value("Go to the theater"))
-                .andExpect(jsonPath("$.id").value(3));
+                .andExpect(jsonPath("$.id").value(2));
     }
 
     @Test

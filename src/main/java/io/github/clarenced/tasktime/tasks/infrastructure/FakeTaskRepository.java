@@ -18,8 +18,8 @@ public class FakeTaskRepository implements TaskRepository {
 
     public FakeTaskRepository() {
         this.tasks = new ArrayList<>();
-        var task1 = Task.create(1L, "Prepare slides for the Spring meetup", "Prepare slides for the Spring meetup", TaskStatus.TO_DO);
-        var task2 = Task.create(3L, "Go to the theater", "Go to the theater", TaskStatus.TO_DO);
+        var task1 = Task.create(1L, "Slides !!!", "Prepare slides for the Spring meetup", TaskStatus.TO_DO);
+        var task2 = Task.create(2L, "Go to the theater", "Go to the theater", TaskStatus.TO_DO);
         tasks.add(task1.getSuccess());
         tasks.add(task2.getSuccess());
     }

@@ -43,7 +43,7 @@ public class TaskCoordinatorTest {
     }
 
     @Test
-    @DisplayName("should update task when validation su")
+    @DisplayName("should update task when validation succeeds")
     void should_update_task_when_validation_succeeds() {
         TaskTimeApi.UpdateTaskDto updateTaskDto =
                 new TaskTimeApi.UpdateTaskDto(of("title to be updated"), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE));
@@ -58,6 +58,7 @@ public class TaskCoordinatorTest {
 
 
     @Test
+    @DisplayName("should not update task when task not found")
     void should_not_update_task_when_task_not_found() {
         Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(10L, new TaskTimeApi.UpdateTaskDto(of("title to be updated"), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE)));
 
@@ -69,12 +70,13 @@ public class TaskCoordinatorTest {
 
 
     @Test
+    @DisplayName("should not update task when title is empty")
     void should_not_update_task_when_title_is_empty() {
         var updateTaskDto = new TaskTimeApi.UpdateTaskDto(Optional.empty(), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE));
         Result<Void, TaskTimeApi.ErrorDto> result = taskCoordinator.updateTask(1L, updateTaskDto);
 
         assertTrue(result.isSuccess());
-        assertTrue(fakeTaskRepository.assertThatTitle(1L, "Prepare slides for the Spring meetup"));
+        assertTrue(fakeTaskRepository.assertThatTitle(1L, "Slides !!!"));
         assertTrue(fakeTaskRepository.assertThatDescription(1L, "description to be updated"));
         assertTrue(fakeTaskRepository.assertThatStatus(1L, TaskTimeApi.TaskStatus.DONE));
     }

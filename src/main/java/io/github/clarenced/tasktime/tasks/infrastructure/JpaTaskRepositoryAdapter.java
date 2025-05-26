@@ -1,7 +1,5 @@
 package io.github.clarenced.tasktime.tasks.infrastructure;
 
-import io.github.clarenced.tasktime.common.Result;
-import io.github.clarenced.tasktime.tasks.domain.Error;
 import io.github.clarenced.tasktime.tasks.domain.Task;
 import io.github.clarenced.tasktime.tasks.domain.TaskStatus;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -36,7 +34,12 @@ public class JpaTaskRepositoryAdapter implements TaskRepository {
 
     @Override
     public void updateTask(Task updatedTask) {
-        // Implementation to be added
+        jpaTaskRepository.findById(updatedTask.getId()).ifPresent(taskJpa -> {
+            taskJpa.setTitle(updatedTask.getTitle());
+            taskJpa.setDescription(updatedTask.getDescription());
+            taskJpa.setStatus(TaskStatusJpa.valueOf(updatedTask.getStatus().name()));
+            jpaTaskRepository.save(taskJpa);
+        });
     }
 
     @Override
