@@ -67,14 +67,14 @@ class TaskUpdatorTest {
     @Test
     void should_return_error_task_when_title_is_too_long () {
         var updateTaskDto =
-                new TaskTimeApi.UpdateTaskDto(of("title to be updated".repeat(35)), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE));
+                new TaskTimeApi.UpdateTaskDto(of("title to be updated".repeat(10)), of("description to be updated"), of(TaskTimeApi.TaskStatus.DONE));
         var originalTask = new TaskTimeApi.TaskDto(1L, "Original Task", "original Description");
 
         Result<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto> result = TaskUpdator.updateTask(originalTask, updateTaskDto);
 
         assertTrue(result.isError());
         assertEquals("title", result.getError().field());
-        assertEquals("title has more than 30 characters", result.getError().message());
+        assertEquals("title has more than 100 characters", result.getError().message());
     }
 
     @Test
@@ -93,14 +93,14 @@ class TaskUpdatorTest {
     @Test
     void should_return_error_when_task_description_is_too_long () {
         var updateTaskDto =
-                new TaskTimeApi.UpdateTaskDto(of("title to be updated"), of("description to be updated".repeat(301)), of(TaskTimeApi.TaskStatus.DONE));
+                new TaskTimeApi.UpdateTaskDto(of("title to be updated"), of("description to be updated".repeat(25)), of(TaskTimeApi.TaskStatus.DONE));
         var originalTask = new TaskTimeApi.TaskDto(1L, "Original Task", "original Description");
 
         Result<TaskTimeApi.TaskDto, TaskTimeApi.ErrorDto> result = TaskUpdator.updateTask(originalTask, updateTaskDto);
 
         assertTrue(result.isError());
         assertEquals("description", result.getError().field());
-        assertEquals("description has more than 300 characters", result.getError().message());
+        assertEquals("description has more than 500 characters", result.getError().message());
     }
 
     @Test
