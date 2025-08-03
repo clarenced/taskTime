@@ -85,4 +85,9 @@ public class FakeTaskRepository implements TaskRepository {
                 .filter(task -> task.getId().equals(taskId))
                 .findFirst();
     }
+
+    @Override
+    public void deleteTask(Long taskId) {
+        this.tasks.removeIf(task -> task.getId().equals(taskId));
+    }
 }

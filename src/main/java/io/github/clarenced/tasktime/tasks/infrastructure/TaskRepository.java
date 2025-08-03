@@ -13,4 +13,6 @@ public interface TaskRepository {
     void updateTask(Task updatedTask);
 
     Optional<Task> findTaskById(Long taskId);
+
+    void deleteTask(Long taskId);
 }

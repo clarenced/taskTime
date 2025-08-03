@@ -70,6 +70,10 @@ public class TaskCoordinator {
                 });
     }
 
+    public void deleteTask(Long taskId) {
+        this.taskRepository.deleteTask(taskId);
+    }
+
 
     private static TaskTimeApi.TaskDto toApi(Task task) {
         return new TaskTimeApi.TaskDto(
