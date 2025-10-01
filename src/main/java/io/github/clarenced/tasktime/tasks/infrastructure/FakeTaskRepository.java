@@ -49,9 +49,7 @@ public class FakeTaskRepository implements TaskRepository {
                 .filter(t -> t.getId().equals(updatedTask.getId()))
                 .findFirst();
 
-        if (task.isPresent()) {
-            this.tasks.set(this.tasks.indexOf(task.get()), updatedTask);
-        }
+        task.ifPresent(value -> this.tasks.set(this.tasks.indexOf(value), updatedTask));
         // If the task doesn't exist, do nothing
     }
 
