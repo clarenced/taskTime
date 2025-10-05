@@ -32,6 +32,14 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+
+// TestContainers
+ testImplementation(platform("org.testcontainers:testcontainers-bom:1.21.0"))
+ testImplementation("org.testcontainers:junit-jupiter")
+ testImplementation("org.testcontainers:postgresql")
+ testImplementation("org.testcontainers:testcontainers")
+ testImplementation("org.springframework.boot:spring-boot-testcontainers")
+
 }
 
 tasks.test {
