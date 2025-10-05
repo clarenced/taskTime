@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,34 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(properties = {"use.real.database = true"})
 @AutoConfigureMockMvc
 @Tag("integration")
-@Testcontainers
+@Import(PostgresSqlTestConfig.class)
 public class TaskTimeApiTest {
-
-
-    /**
-     * Creates a testcontainers postgres container.
-     * The container field is static so that it will start and shut down once for all tests.
-     * Otherwise the container will start and shut down for each test.
-     *
-     */
-
-    @Container
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-            .withDatabaseName("taskTime")
-            .withUsername("test")
-            .withPassword("test");
-
-    /**
-     * With the @DynamicPropertySource annotation,
-     * you can inject or extend properties (or env variables) into the test context.
-     * @param registry
-     */
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
 
     @Test
     @DisplayName("Should return list of current tasks")
