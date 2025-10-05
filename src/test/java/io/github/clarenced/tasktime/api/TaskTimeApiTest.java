@@ -1,19 +1,15 @@
 package io.github.clarenced.tasktime.api;
 
 
+import io.github.clarenced.tasktime.WithPostgres;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -22,22 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(properties = {"use.real.database = true"})
 @AutoConfigureMockMvc
 @Tag("integration")
-@Testcontainers
+@WithPostgres
 public class TaskTimeApiTest {
-
-    @Container
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-            .withDatabaseName("taskTime")
-            .withUsername("test")
-            .withPassword("test");
-
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
-
 
     @Test
     @DisplayName("Should return list of current tasks")
@@ -77,8 +59,8 @@ public class TaskTimeApiTest {
     @DisplayName("Should create new task")
     void should_create_task(@Autowired MockMvc mockMvc) throws Exception {
         mockMvc.perform(post("/api/tasks")
-                .contentType("application/json")
-                .content("{\"title\":\"New task\",\"description\":\"description\"}"))
+                        .contentType("application/json")
+                        .content("{\"title\":\"New task\",\"description\":\"description\"}"))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(get("/api/tasks"))
@@ -94,8 +76,8 @@ public class TaskTimeApiTest {
     @DisplayName("Should bad request when creating tasks with empty description")
     void should_bad_request_when_creating_tasks_with_empty_title(@Autowired MockMvc mockMvc) throws Exception {
         mockMvc.perform(post("/api/tasks")
-                .contentType("application/json")
-                .content("{\"title\":\"\",\"description\":\"description\"}"))
+                        .contentType("application/json")
+                        .content("{\"title\":\"\",\"description\":\"description\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.message").value("title is empty"))
@@ -107,8 +89,8 @@ public class TaskTimeApiTest {
     @DisplayName("Should return bad request when title is empty")
     void should_return_bad_request_when_description_is_empty(@Autowired MockMvc mockMvc) throws Exception {
         mockMvc.perform(post("/api/tasks")
-                .contentType("application/json")
-                .content("{\"title\":\"title\",\"description\":\"\"}"))
+                        .contentType("application/json")
+                        .content("{\"title\":\"title\",\"description\":\"\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.message").value("description is empty"))
@@ -119,8 +101,8 @@ public class TaskTimeApiTest {
     @DisplayName("should return 404 not found when updating task with unknown id")
     void should_return_404_not_found_when_updating_task_with_unknown_id(@Autowired MockMvc mockMvc) throws Exception {
         mockMvc.perform(post("/api/tasks/{taskId}", 4)
-                .contentType("application/json")
-                .content("{\"title\":\"title\",\"description\":\"description\"}"))
+                        .contentType("application/json")
+                        .content("{\"title\":\"title\",\"description\":\"description\"}"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.message").value("Task with id 4 does not exist"));
@@ -130,8 +112,8 @@ public class TaskTimeApiTest {
     @DisplayName("should return 200 when updating task with valid data")
     void should_return_200_when_updating_task_with_valid_data(@Autowired MockMvc mockMvc) throws Exception {
         mockMvc.perform(post("/api/tasks/{taskId}", 1)
-                .contentType("application/json")
-                .content("{\"title\":\"title to be updated\",\"description\":\"description to be updated\"}"))
+                        .contentType("application/json")
+                        .content("{\"title\":\"title to be updated\",\"description\":\"description to be updated\"}"))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/api/tasks/{taskId}", 1))
@@ -141,4 +123,5 @@ public class TaskTimeApiTest {
                 .andExpect(jsonPath("$.description").value("description to be updated"))
                 .andExpect(jsonPath("$.id").value(1));
     }
+
 }

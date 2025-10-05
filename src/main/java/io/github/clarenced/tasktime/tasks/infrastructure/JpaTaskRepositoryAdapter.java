@@ -47,6 +47,11 @@ public class JpaTaskRepositoryAdapter implements TaskRepository {
         return jpaTaskRepository.findById(taskId).map(this::mapToDomain);
     }
 
+    @Override
+    public void deleteTask(Long taskId) {
+        jpaTaskRepository.deleteById(taskId);
+    }
+
     private Task mapToDomain(TaskJpa taskJpa) {
         return Task
                 .create(taskJpa.getId(), taskJpa.getTitle(), taskJpa.getDescription(), TaskStatus.valueOf(taskJpa.getStatus().name()))

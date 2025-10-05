@@ -17,6 +17,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
     // PostgreSQL et Flyway
     implementation("org.postgresql:postgresql:42.7.1")
@@ -32,11 +33,12 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    // TestContainers
-    testImplementation(platform("org.testcontainers:testcontainers-bom:1.21.0"))
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:postgresql")
-    testImplementation("org.testcontainers:testcontainers")
+// TestContainers
+ testImplementation(platform("org.testcontainers:testcontainers-bom:1.21.0"))
+ testImplementation("org.testcontainers:junit-jupiter")
+ testImplementation("org.testcontainers:postgresql")
+ testImplementation("org.testcontainers:testcontainers")
+ testImplementation("org.springframework.boot:spring-boot-testcontainers")
 
 }
 

@@ -1,6 +1,5 @@
 package io.github.clarenced.tasktime.tasks.infrastructure;
 
-import io.github.clarenced.tasktime.common.Result;
 import io.github.clarenced.tasktime.tasks.domain.Task;
 import io.github.clarenced.tasktime.tasks.domain.TaskStatus;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -49,9 +48,7 @@ public class FakeTaskRepository implements TaskRepository {
                 .filter(t -> t.getId().equals(updatedTask.getId()))
                 .findFirst();
 
-        if (task.isPresent()) {
-            this.tasks.set(this.tasks.indexOf(task.get()), updatedTask);
-        }
+        task.ifPresent(value -> this.tasks.set(this.tasks.indexOf(value), updatedTask));
         // If the task doesn't exist, do nothing
     }
 
@@ -84,5 +81,10 @@ public class FakeTaskRepository implements TaskRepository {
         return getTasks().stream()
                 .filter(task -> task.getId().equals(taskId))
                 .findFirst();
+    }
+
+    @Override
+    public void deleteTask(Long taskId) {
+        this.tasks.removeIf(task -> task.getId().equals(taskId));
     }
 }

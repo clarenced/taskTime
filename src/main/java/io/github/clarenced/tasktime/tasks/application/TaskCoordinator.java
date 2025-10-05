@@ -45,14 +45,6 @@ public class TaskCoordinator {
                 .collect(Collectors.toList());
     }
 
-    private static TaskTimeApi.TaskDto toApi(Task task) {
-        return new TaskTimeApi.TaskDto(
-                task.getId(),
-                task.getTitle(),
-                task.getDescription(),
-                TaskTimeApi.TaskStatus.valueOf(task.getStatus().name()));
-    }
-
     public Optional<TaskTimeApi.TaskDto> findTaskById(Long taskId) {
         return this.taskRepository.findTaskById(taskId)
                 .map(TaskCoordinator::toApi);
@@ -78,6 +70,18 @@ public class TaskCoordinator {
                 });
     }
 
+    public void deleteTask(Long taskId) {
+        this.taskRepository.deleteTask(taskId);
+    }
+
+
+    private static TaskTimeApi.TaskDto toApi(Task task) {
+        return new TaskTimeApi.TaskDto(
+                task.getId(),
+                task.getTitle(),
+                task.getDescription(),
+                TaskTimeApi.TaskStatus.valueOf(task.getStatus().name()));
+    }
 
     private static Result<Task, Error> mapToDomain(TaskTimeApi.TaskDto updatedTaskDto) {
         return Task.create(

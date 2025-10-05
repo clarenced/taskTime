@@ -6,8 +6,8 @@ public class ErrorFactory {
         return new TaskTimeApi.ErrorDto("taskId", "Task with id " + taskId + " does not exist");
     }
 
-    public static TaskTimeApi.ErrorDto titleHasMoreThan30Characters() {
-        return new TaskTimeApi.ErrorDto("title", "title has more than 30 characters");
+    public static TaskTimeApi.ErrorDto titleHasMoreThan100Characters() {
+        return new TaskTimeApi.ErrorDto("title", "title has more than 100 characters");
     }
 
     public static TaskTimeApi.ErrorDto titleHasLessThan5Characters() {
@@ -18,8 +18,8 @@ public class ErrorFactory {
         return new TaskTimeApi.ErrorDto("description", "description must have at least 5 characters");
     }
 
-    public static TaskTimeApi.ErrorDto descriptionHasMore300Characters() {
-        return new TaskTimeApi.ErrorDto("description", "description has more than 300 characters");
+    public static TaskTimeApi.ErrorDto descriptionHasMore500Characters() {
+        return new TaskTimeApi.ErrorDto("description", "description has more than 500 characters");
     }
 
     public static TaskTimeApi.ErrorDto descriptionIsEmpty() {

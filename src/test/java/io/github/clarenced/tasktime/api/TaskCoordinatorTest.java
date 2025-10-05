@@ -112,6 +112,6 @@ public class TaskCoordinatorTest {
 
         assertTrue(result.isError());
         assertEquals("title", result.getError().field());
-        assertEquals("title has more than 30 characters", result.getError().message());
+        assertEquals("title has more than 100 characters", result.getError().message());
     }
 }
