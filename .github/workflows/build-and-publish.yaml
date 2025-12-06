@@ -38,7 +38,7 @@ jobs:
       - name: Build image and push
         uses: docker/build-push-action@v6
         with:
- 	  context: true
+          context: .
           push: true
           tags: |
             ghcr.io/clarenced/tasktime:${{ github.sha }}
