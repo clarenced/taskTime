@@ -1,13 +1,12 @@
 package io.github.clarenced.tasktime.api;
 
-import io.github.clarenced.tasktime.common.Result;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
+import io.github.clarenced.tasktime.common.Result;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class ResultTest {
 

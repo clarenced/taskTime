@@ -5,4 +5,3 @@ public enum TaskStatusJpa {
     IN_PROGRESS,
     DONE
 }
-

@@ -1,16 +1,15 @@
 package io.github.clarenced.tasktime.api;
 
-import io.github.clarenced.tasktime.common.Result;
-import io.github.clarenced.tasktime.tasks.infrastructure.FakeTaskRepository;
-import io.github.clarenced.tasktime.tasks.application.TaskCoordinator;
-import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
-
 import static java.util.Optional.of;
 import static org.junit.jupiter.api.Assertions.*;
+
+import io.github.clarenced.tasktime.common.Result;
+import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
+import io.github.clarenced.tasktime.tasks.application.TaskCoordinator;
+import io.github.clarenced.tasktime.tasks.infrastructure.FakeTaskRepository;
+import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class TaskCoordinatorTest {
 

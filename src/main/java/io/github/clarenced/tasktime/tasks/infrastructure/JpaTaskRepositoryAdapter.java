@@ -2,12 +2,11 @@ package io.github.clarenced.tasktime.tasks.infrastructure;
 
 import io.github.clarenced.tasktime.tasks.domain.Task;
 import io.github.clarenced.tasktime.tasks.domain.TaskStatus;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 
 @Service
 @ConditionalOnProperty(name = "use.real.database", havingValue = "true")

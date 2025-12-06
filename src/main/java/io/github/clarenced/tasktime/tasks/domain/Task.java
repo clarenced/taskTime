@@ -1,7 +1,6 @@
 package io.github.clarenced.tasktime.tasks.domain;
 
 import io.github.clarenced.tasktime.common.Result;
-
 import java.util.Objects;
 
 public final class Task {

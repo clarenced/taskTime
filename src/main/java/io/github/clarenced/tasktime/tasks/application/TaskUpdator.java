@@ -3,7 +3,6 @@ package io.github.clarenced.tasktime.tasks.application;
 import io.github.clarenced.tasktime.common.Result;
 import io.github.clarenced.tasktime.tasks.api.ErrorFactory;
 import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
-
 import java.util.Optional;
 
 public class TaskUpdator {

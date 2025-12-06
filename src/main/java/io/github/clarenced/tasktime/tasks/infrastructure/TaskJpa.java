@@ -1,10 +1,9 @@
 package io.github.clarenced.tasktime.tasks.infrastructure;
 
 import jakarta.persistence.*;
+import java.util.Objects;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
-import java.util.Objects;
 
 @Entity
 @Table(name = "task", schema = "taskTime")

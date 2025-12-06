@@ -7,11 +7,10 @@ import io.github.clarenced.tasktime.tasks.domain.Error;
 import io.github.clarenced.tasktime.tasks.domain.Task;
 import io.github.clarenced.tasktime.tasks.domain.TaskStatus;
 import io.github.clarenced.tasktime.tasks.infrastructure.TaskRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 
 @Service

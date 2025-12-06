@@ -1,14 +1,13 @@
 package io.github.clarenced.tasktime.tasks;
 
+import static java.util.Optional.of;
+import static org.junit.jupiter.api.Assertions.*;
+
 import io.github.clarenced.tasktime.common.Result;
 import io.github.clarenced.tasktime.tasks.api.TaskTimeApi;
 import io.github.clarenced.tasktime.tasks.application.TaskUpdator;
-import org.junit.jupiter.api.Test;
-
 import java.util.Optional;
-
-import static java.util.Optional.of;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class TaskUpdatorTest {
 
