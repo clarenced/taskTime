@@ -1,16 +1,22 @@
-name: Building
-run-name: ${{github.actor}} Building TaskTime
+name: Build and push 
+run-name: ${{github.actor}} Building and pushing TaskTime
 on: 
   push:
     branches: 
       - main
   pull_request:
     branches:
-      - main 
+      - main
+      - 'feature/*'
+      - 'bugfix/*'
 
 jobs: 
   build: 
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
     steps:
       - name: Checkout code 
         uses: actions/checkout@v4
@@ -23,3 +29,15 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
       - name: Build project
         run: ./gradlew build nativeCompile
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build image and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
