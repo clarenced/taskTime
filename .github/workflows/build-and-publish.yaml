@@ -14,10 +14,10 @@ jobs:
     steps:
       - name: Checkout code 
         uses: actions/checkout@v4
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - name: Setup GraalVm
+        uses: graalvm/setup-graalvm@v1
         with: 
-          distribution: 'temurin'
+          distribution: 'graalvm'
           java-version: 25
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
