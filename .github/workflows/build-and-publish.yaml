@@ -40,4 +40,4 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/clarenced/tasktime:${{ github.sha }}
