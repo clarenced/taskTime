@@ -1,0 +1,25 @@
+name: Building
+run-name: ${{github.actor}} Building TaskTime
+on: 
+  push:
+    branches: 
+      - main
+  pull_request:
+    branches:
+      - main 
+
+jobs: 
+  build: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code 
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with: 
+          distribution: 'temurin'
+          java-version: 25
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Build project
+        run: ./gradlew build nativeCompile
