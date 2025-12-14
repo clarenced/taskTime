@@ -1,8 +1,8 @@
-name: Build and push 
+name: Build and push
 run-name: ${{github.actor}} Building and pushing TaskTime
-on: 
+on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
     branches:
@@ -10,35 +10,129 @@ on:
       - 'feature/*'
       - 'bugfix/*'
 
-jobs: 
-  build: 
+jobs:
+  version:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip ci]')
+    permissions:
+      contents: write
+    outputs:
+      new_version: ${{ steps.bump.outputs.version }}
+      bumped: ${{ steps.bump.outputs.bumped }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine bump type from commits
+        id: bump_type
+        run: |
+          # Get commits since last tag (or all commits if no tags)
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"%s" HEAD)
+          else
+            COMMITS=$(git log --pretty=format:"%s" ${LAST_TAG}..HEAD)
+          fi
+
+          # Determine bump type based on conventional commits
+          BUMP_TYPE="patch"
+          if echo "$COMMITS" | grep -qE "^feat(\(.+\))?!:|BREAKING CHANGE:"; then
+            BUMP_TYPE="major"
+          elif echo "$COMMITS" | grep -qE "^feat(\(.+\))?:"; then
+            BUMP_TYPE="minor"
+          fi
+
+          echo "type=$BUMP_TYPE" >> $GITHUB_OUTPUT
+          echo "Detected bump type: $BUMP_TYPE"
+
+      - name: Bump version
+        id: bump
+        run: |
+          # Extract current version
+          VERSION=$(grep -oP 'version\s*=\s*"\K[^"]+' build.gradle.kts)
+          VERSION=${VERSION%-SNAPSHOT}
+
+          IFS='.' read -r major minor patch <<< "$VERSION"
+
+          case "${{ steps.bump_type.outputs.type }}" in
+            major)
+              major=$((major + 1))
+              minor=0
+              patch=0
+              ;;
+            minor)
+              minor=$((minor + 1))
+              patch=0
+              ;;
+            patch)
+              patch=$((patch + 1))
+              ;;
+          esac
+
+          NEW_VERSION="${major}.${minor}.${patch}"
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "bumped=true" >> $GITHUB_OUTPUT
+
+          # Update build.gradle.kts
+          sed -i 's/version = "[^"]*"/version = "'"$NEW_VERSION"'"/' build.gradle.kts
+
+          # Commit and tag
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add build.gradle.kts
+          git commit -m "Bump version to ${NEW_VERSION} [skip ci]"
+          git tag "v${NEW_VERSION}"
+          git push origin main --tags
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [version]
+    if: always() && (needs.version.result == 'success' || needs.version.result == 'skipped')
     permissions:
       contents: read
       packages: write
       id-token: write
     steps:
-      - name: Checkout code 
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'push' && 'main' || github.ref }}
+
       - name: Setup GraalVm
         uses: graalvm/setup-graalvm@v1
-        with: 
+        with:
           distribution: 'graalvm'
           java-version: 25
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
+
       - name: Build project
         run: ./gradlew build nativeCompile
+
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=$(grep -oP 'version\s*=\s*"\K[^"]+' build.gradle.kts)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Login to GHCR
+        if: github.event_name == 'push'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build image and push
+        if: github.event_name == 'push'
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
+            ghcr.io/clarenced/tasktime:${{ steps.version.outputs.version }}
             ghcr.io/clarenced/tasktime:${{ github.sha }}
