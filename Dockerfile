@@ -1,4 +1,4 @@
-FROM ghcr.io/graalvm/graalvm-community:25.0.1-ol8-20251021
+FROM oraclelinux:9-slim
 LABEL org.opencontainers.image.source=https://github.com/clarenced/taskTime
 LABEL org.opencontainers.image.description="TaskTime"
 LABEL org.opencontainers.image.licenses=MIT
