@@ -18,24 +18,27 @@ repositories {
 }
 
 tasks.named<BootBuildImage>("bootBuildImage") {
+    imagePlatform.set("linux/arm64")
+    val nativeArgs = listOf(
+        "-march=compatibility",
+        "--gc=serial",
+        "-R:MaxHeapSize=256m",
+        "-O3",
+        "-J-Xmx8g",
+        "-J-XX:MaxRAMPercentage=85.0",
+    ).joinToString(" ")
+
     environment = mapOf(
-        "BP_NATIVE_IMAGE_BUILD_ARGUMENTS" to
-                """
-				-march=compatibility
-				--gc=serial
-				-R:MaxHeapSize=256m
-        -Xmx=8G
-				-O3
-				-J-XX:MaxRAMPercentage=85.0
-			""",
+        "BP_NATIVE_IMAGE_BUILD_ARGUMENTS" to nativeArgs,
         "BP_HEALTH_CHECKER_ENABLED" to "true",
-    );
+    )
 
     docker {
-		  host.set("unix:///var/run/docker.sock")
-		  bindHostToBuilder.set(true)
-	}
+        host.set("unix:///var/run/docker.sock")
+        bindHostToBuilder.set(true)
+    }
 }
+
 
 
 

@@ -101,6 +101,12 @@ jobs:
         with:
           ref: ${{ github.event_name == 'push' && 'main' || github.ref }}
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Setup GraalVm
         uses: graalvm/setup-graalvm@v1
         with:
