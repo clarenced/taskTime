@@ -138,10 +138,12 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ghcr.io/clarenced/tasktime:${{ steps.version.outputs.version }}
             ghcr.io/clarenced/tasktime:${{ github.sha }}
+
       - name: Update CD repo with new image tag
         run: |
           git clone https://x-access-token:${{ secrets.TASKTIME_CD_REPO_TOKEN }}@github.com/clarenced/tasktime-cd.git
