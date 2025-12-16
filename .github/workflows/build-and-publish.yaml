@@ -142,7 +142,7 @@ jobs:
           cd tasktime-cd
 
           sed -i "s/appVersion:.*/appVersion: \"${{ steps.version.outputs.version }}\"/" tasktime/Chart.yaml
-          sed -i "s/Version:.*/Version: \"${{ steps.version.outputs.version }}\"/" tasktime/values.yaml
+          sed -i "s/version:.*/version: ${{ steps.version.outputs.version }}/" tasktime/values.yaml
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
