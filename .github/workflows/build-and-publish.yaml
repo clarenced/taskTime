@@ -136,3 +136,18 @@ jobs:
           tags: |
             ghcr.io/clarenced/tasktime:${{ steps.version.outputs.version }}
             ghcr.io/clarenced/tasktime:${{ github.sha }}
+      - name: Update CD repo with new image tag
+        run: |
+          git clone https://x-access-token:${{ secrets.TASKTIME_CD_REPO_TOKEN }}@github.com/clarenced/tasktime-cd.git
+          cd tasktime-cd
+
+          sed -i "s/appVersion:.*/appVersion: \"${{ steps.version.outputs.version }}\"/" tasktime/Chart.yaml
+          sed -i "s/Version:.*/Version: \"${{ steps.version.outputs.version }}\"/" tasktime/values.yaml
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+      
+          git add .
+          git commit -m "deploy tasktime ${{ steps.version.outputs.version }}"
+          git push
+
