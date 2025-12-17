@@ -6,7 +6,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 @Entity
-@Table(name = "task", schema = "taskTime")
+@Table(name = "task", schema = "task_time")
 public class TaskJpa {
 
   @Id
