@@ -9,7 +9,7 @@ plugins {
   }
 
 group = "io.github.clarenced"
-version = "1.1.10"
+version = "1.1.11"
 
 repositories {
     mavenCentral()
