@@ -25,7 +25,7 @@ spring:
       hibernate:
         format_sql: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        default_schema: taskTime
+        default_schema: task_time
 
   flyway:
     enabled: true
