@@ -1,5 +1,3 @@
-import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
-
 plugins {
     id("java")
     id("org.springframework.boot") version "3.5.7"
@@ -17,6 +15,17 @@ repositories {
     mavenCentral()
 }
 
+tasks.bootJar {
+    layered {
+        enabled.set(true)
+    }
+}
+
+tasks.jar {
+    enabled = false
+}
+
+/*
 tasks.named<BootBuildImage>("bootBuildImage") {
     imagePlatform.set("linux/arm64")
     val nativeArgs = listOf(
@@ -37,7 +46,7 @@ tasks.named<BootBuildImage>("bootBuildImage") {
         host.set("unix:///var/run/docker.sock")
         bindHostToBuilder.set(true)
     }
-}
+}*/
 
 
 

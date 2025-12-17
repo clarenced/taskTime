@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: taskTime
+  name: taskTime
+  namespace: taskTime
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: taskTime
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: taskTime
+    spec:
+      containers:
+      - image: ghcr.io/clarenced/tasktime:1.1.0
+        name: tasktime
+        resources: {}
+status: {}
