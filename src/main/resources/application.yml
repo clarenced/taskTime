@@ -32,7 +32,7 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     baseline-version: 1
-    schemas: taskTime
+    schemas: task_time
     clean-disabled: true
     validate-on-migrate: true
 
