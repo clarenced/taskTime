@@ -36,3 +36,16 @@ spring:
 use:
   real:
     database: true
+
+management:
+  endpoint:
+    web:
+      exposure:
+        include: health,probes
+    health:
+      probes:
+        enabled: true
+      livenessState:
+        enabled: true
+      readinessState:
+        enabled: true
