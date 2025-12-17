@@ -39,3 +39,9 @@ spring:
 use:
   real:
     database: true
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true 
